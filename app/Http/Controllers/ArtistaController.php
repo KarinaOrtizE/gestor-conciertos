@@ -7,59 +7,60 @@ use Illuminate\Http\Request;
 
 class ArtistaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $artistas = Artista::withCount('eventos')->orderBy('nombre')->get();
+        return view('artista.listado', compact('artistas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('artista.formCrear');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $datos = $request->validate([
+            'nombre'     => 'required|string|max:255',
+            'spotify_id' => 'nullable|string|max:255|unique:artistas,spotify_id',
+            'imagen_url' => 'nullable|url|max:500',
+            'generos'    => 'nullable|string|max:255',
+        ]);
+
+        Artista::create($datos);
+
+        return redirect()->route('artistas.index')->with('ok', 'Artista creado correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Artista $artista)
     {
-        //
+        $artista->load('eventos');
+        return view('artista.detalle', compact('artista'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Artista $artista)
     {
-        //
+        return view('artista.formEditar', compact('artista'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Artista $artista)
     {
-        //
+        $datos = $request->validate([
+            'nombre'     => 'required|string|max:255',
+            'spotify_id' => 'nullable|string|max:255|unique:artistas,spotify_id,' . $artista->id,
+            'imagen_url' => 'nullable|url|max:500',
+            'generos'    => 'nullable|string|max:255',
+        ]);
+
+        $artista->update($datos);
+
+        return redirect()->route('artistas.index')->with('ok', 'Artista actualizado correctamente.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Artista $artista)
     {
-        //
+        $artista->delete();
+
+        return redirect()->route('artistas.index')->with('ok', 'Artista eliminado.');
     }
 }
