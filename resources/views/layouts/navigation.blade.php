@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('artistas.index')" :active="request()->routeIs('artistas.*')">
                         Artistas
                     </x-nav-link>
+                    <x-nav-link :href="route('eventos.index')" :active="request()->routeIs('eventos.*')">
+                        Eventos
+                    </x-nav-link>
                 </div>
             </div>
 
