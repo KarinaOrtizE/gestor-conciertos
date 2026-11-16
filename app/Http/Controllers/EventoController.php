@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EventoRequest;
 use App\Models\Artista;
 use App\Models\Evento;
+use App\Services\ClimaService;
 
 class EventoController extends Controller
 {
@@ -30,11 +31,12 @@ class EventoController extends Controller
         return redirect()->route('eventos.index')->with('ok', 'Evento creado correctamente.');
     }
 
-    public function show(Evento $evento)
+    public function show(Evento $evento, ClimaService $clima)
     {
         $evento->load('artista');
+        $clima = $clima->pronostico($evento);
 
-        return view('evento.detalle', compact('evento'));
+        return view('evento.detalle', compact('evento', 'clima'));
     }
 
     public function edit(Evento $evento)
