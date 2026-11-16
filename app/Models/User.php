@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public function eventosFavoritos()
     {
-        return $this->belongsToMany(Evento::class);
+        return $this->belongsToMany(Evento::class)->withTimestamps();
     }
 
     public function avatarUrl(): ?string

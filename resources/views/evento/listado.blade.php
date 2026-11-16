@@ -59,7 +59,8 @@
                                 <td>{{ $evento->ciudad }}</td>
                                 <td>{{ $evento->genero }}</td>
                                 <td data-order="{{ $evento->precio }}">${{ number_format($evento->precio, 0, ',', '.') }}</td>
-                                <td>
+                                <td class="whitespace-nowrap">
+                                    <x-boton-favorito :evento="$evento" :marcado="$favoritos->contains($evento->id)" compacto class="align-middle" />
                                     <a href="{{ route('eventos.show', $evento) }}" class="text-blue-600 hover:underline">Ver</a>
                                     @can('administrar')
                                         | <a href="{{ route('eventos.edit', $evento) }}" class="text-yellow-600 hover:underline">Editar</a> |

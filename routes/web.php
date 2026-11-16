@@ -3,6 +3,7 @@
 use App\Http\Controllers\ArtistaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventoController;
+use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReporteController;
@@ -28,6 +29,10 @@ Route::middleware('auth')->group(function () {
     });
     Route::resource('artistas', ArtistaController::class)->only(['index', 'show']);
     Route::resource('eventos', EventoController::class)->only(['index', 'show']);
+
+    // Favoritos de cada usuario
+    Route::get('/favoritos', [FavoritoController::class, 'index'])->name('favoritos.index');
+    Route::post('/eventos/{evento}/favorito', [FavoritoController::class, 'alternar'])->name('eventos.favorito');
 
     // Reportes en PDF
     Route::get('/reportes/eventos', [ReporteController::class, 'eventos'])->name('reportes.eventos');

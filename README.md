@@ -13,6 +13,7 @@ Hecha con Laravel 12 y Breeze (Blade, Tailwind y Alpine). Los listados usan Data
 - Reporte de eventos y ficha de cada evento en PDF.
 - Búsqueda de artistas en Spotify para llenar el formulario.
 - Pronóstico del clima en el detalle de cada evento (Open-Meteo, sin clave).
+- Eventos favoritos: cada usuario marca eventos con el corazón y los ve en *Mis favoritos*.
 - Roles:
   - **admin**: crea, edita y elimina artistas y eventos.
   - **usuario**: consulta los listados y el detalle.
@@ -87,7 +88,7 @@ El detalle de cada evento muestra el pronóstico para su ciudad a la hora en que
 
 ## API
 
-API REST en JSON bajo `/api`. La consulta es pública; crear, editar y eliminar requiere el token de un usuario admin.
+API REST en JSON bajo `/api`. La consulta es pública; los favoritos requieren el token de cualquier usuario, y crear, editar y eliminar, el de un admin.
 
 | Método | Ruta | Acceso | Descripción |
 |---|---|---|---|
@@ -103,6 +104,9 @@ API REST en JSON bajo `/api`. La consulta es pública; crear, editar y eliminar 
 | POST | `/api/artistas` | admin | Crea un artista |
 | PUT/PATCH | `/api/artistas/{id}` | admin | Actualiza un artista |
 | DELETE | `/api/artistas/{id}` | admin | Elimina un artista y sus eventos |
+| GET | `/api/favoritos` | token | Eventos favoritos del dueño del token |
+| PUT | `/api/favoritos/{id}` | token | Agrega un evento a sus favoritos |
+| DELETE | `/api/favoritos/{id}` | token | Quita un evento de sus favoritos |
 
 Filtros de `GET /api/eventos`: `q` (título), `genero`, `ciudad`, `artista_id`, `proximos=1` y `por_pagina` (máximo 100). `GET /api/artistas` acepta `q` y `por_pagina`.
 

@@ -41,6 +41,25 @@ Alpine.data('buscadorSpotify', (url) => ({
     },
 }));
 
+// Botón de favorito: alterna sin recargar. Si la petición falla, se envía el formulario normal.
+Alpine.data('botonFavorito', (marcado) => ({
+    marcado,
+    enviando: false,
+
+    async alternar(formulario) {
+        if (this.enviando) return;
+        this.enviando = true;
+        try {
+            const { data } = await window.axios.post(formulario.action);
+            this.marcado = data.favorito;
+        } catch (e) {
+            formulario.submit();
+        } finally {
+            this.enviando = false;
+        }
+    },
+}));
+
 Alpine.start();
 
 // Confirmación de borrado: el texto viaja en data-confirmar para no armar JavaScript con datos del usuario.
