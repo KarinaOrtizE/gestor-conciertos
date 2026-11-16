@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArtistaRequest;
 use App\Models\Artista;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ArtistaController extends Controller
 {
     public function index()
     {
         $artistas = Artista::withCount('eventos')->orderBy('nombre')->get();
+
         return view('artista.listado', compact('artistas'));
     }
 
@@ -19,16 +19,9 @@ class ArtistaController extends Controller
         return view('artista.formCrear');
     }
 
-    public function store(Request $request)
+    public function store(ArtistaRequest $request)
     {
-        $datos = $request->validate([
-            'nombre'     => 'required|string|max:255',
-            'spotify_id' => 'nullable|string|max:255|unique:artistas,spotify_id',
-            'imagen_url' => 'nullable|url|max:500',
-            'generos'    => 'nullable|string|max:255',
-        ]);
-
-        Artista::create($datos);
+        Artista::create($request->validated());
 
         return redirect()->route('artistas.index')->with('ok', 'Artista creado correctamente.');
     }
@@ -36,6 +29,7 @@ class ArtistaController extends Controller
     public function show(Artista $artista)
     {
         $artista->load('eventos');
+
         return view('artista.detalle', compact('artista'));
     }
 
@@ -44,26 +38,15 @@ class ArtistaController extends Controller
         return view('artista.formEditar', compact('artista'));
     }
 
-    public function update(Request $request, Artista $artista)
+    public function update(ArtistaRequest $request, Artista $artista)
     {
-        $datos = $request->validate([
-            'nombre'     => 'required|string|max:255',
-            'spotify_id' => 'nullable|string|max:255|unique:artistas,spotify_id,' . $artista->id,
-            'imagen_url' => 'nullable|url|max:500',
-            'generos'    => 'nullable|string|max:255',
-        ]);
-
-        $artista->update($datos);
+        $artista->update($request->validated());
 
         return redirect()->route('artistas.index')->with('ok', 'Artista actualizado correctamente.');
     }
 
     public function destroy(Artista $artista)
     {
-        // La base borra los eventos en cascada, pero sus afiches hay que quitarlos del disco aquí.
-        Storage::disk('public')->delete(
-            $artista->eventos()->whereNotNull('afiche')->pluck('afiche')->all()
-        );
         $artista->delete();
 
         return redirect()->route('artistas.index')->with('ok', 'Artista eliminado.');

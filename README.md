@@ -9,6 +9,7 @@ Hecha con Laravel 12 y Breeze (Blade, Tailwind y Alpine). Los listados usan Data
 - Página de inicio pública con buscador por evento o artista y los próximos eventos.
 - Registro e inicio de sesión.
 - CRUD de artistas y de eventos (con subida de afiche).
+- API REST en JSON para consultar y gestionar eventos y artistas.
 - Roles:
   - **admin**: crea, edita y elimina artistas y eventos.
   - **usuario**: consulta los listados y el detalle.
@@ -58,6 +59,45 @@ Para dar el rol de admin a una cuenta que ya existe:
 
 ```bash
 php artisan usuario:admin correo@ejemplo.com
+```
+
+## API
+
+API REST en JSON bajo `/api`. La consulta es pública; crear, editar y eliminar requiere el token de un usuario admin.
+
+| Método | Ruta | Acceso | Descripción |
+|---|---|---|---|
+| POST | `/api/login` | público | Recibe `email` y `password`; devuelve un `token` |
+| POST | `/api/logout` | token | Revoca el token usado |
+| GET | `/api/eventos` | público | Lista paginada de eventos con su artista |
+| GET | `/api/eventos/{id}` | público | Detalle de un evento |
+| POST | `/api/eventos` | admin | Crea un evento (acepta `afiche` como archivo) |
+| PUT/PATCH | `/api/eventos/{id}` | admin | Actualiza un evento |
+| DELETE | `/api/eventos/{id}` | admin | Elimina un evento |
+| GET | `/api/artistas` | público | Lista paginada de artistas con su número de eventos |
+| GET | `/api/artistas/{id}` | público | Detalle de un artista con sus eventos |
+| POST | `/api/artistas` | admin | Crea un artista |
+| PUT/PATCH | `/api/artistas/{id}` | admin | Actualiza un artista |
+| DELETE | `/api/artistas/{id}` | admin | Elimina un artista y sus eventos |
+
+Filtros de `GET /api/eventos`: `q` (título), `genero`, `ciudad`, `artista_id`, `proximos=1` y `por_pagina` (máximo 100). `GET /api/artistas` acepta `q` y `por_pagina`.
+
+Respuestas: `200` correcto, `201` creado, `204` eliminado, `401` sin token, `403` sin rol admin, `404` no existe, `422` datos inválidos (con el detalle en `errors`), `429` demasiados intentos de login.
+
+```bash
+# Consultar los próximos eventos
+curl "http://localhost:8000/api/eventos?proximos=1"
+
+# Obtener un token
+curl -X POST http://localhost:8000/api/login \
+     -H "Accept: application/json" \
+     -d email=admin@example.com -d password=password
+
+# Crear un artista con el token
+curl -X POST http://localhost:8000/api/artistas \
+     -H "Accept: application/json" \
+     -H "Authorization: Bearer <token>" \
+     -d nombre="Grupo Niche"
 ```
 
 ## Pruebas
