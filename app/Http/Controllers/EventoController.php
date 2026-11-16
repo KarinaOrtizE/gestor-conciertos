@@ -6,6 +6,7 @@ use App\Models\Artista;
 use App\Models\Evento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class EventoController extends Controller
 {
@@ -19,7 +20,7 @@ class EventoController extends Controller
             'lugar'      => 'required|string|max:255',
             'ciudad'     => 'required|string|max:255',
             'precio'     => 'required|numeric|min:0',
-            'genero'     => 'required|string|max:100',
+            'genero'     => ['required', Rule::in(self::GENEROS)],
             'artista_id' => 'required|exists:artistas,id',
             'afiche'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ];

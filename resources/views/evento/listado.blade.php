@@ -15,10 +15,12 @@
                     <div class="p-3 mb-4 text-green-800 bg-green-100 rounded">{{ session('ok') }}</div>
                 @endif
 
-                <div class="mb-4">
-                    <a href="{{ route('eventos.create') }}"
-                       class="px-4 py-2 text-white bg-purple-600 rounded hover:bg-purple-500">+ Nuevo evento</a>
-                </div>
+                @can('administrar')
+                    <div class="mb-4">
+                        <a href="{{ route('eventos.create') }}"
+                           class="px-4 py-2 text-white bg-purple-600 rounded hover:bg-purple-500">+ Nuevo evento</a>
+                    </div>
+                @endcan
 
                 <table id="tabla-eventos" class="display" style="width:100%">
                     <thead>
@@ -50,14 +52,16 @@
                                 <td>{{ $evento->genero }}</td>
                                 <td data-order="{{ $evento->precio }}">${{ number_format($evento->precio, 0, ',', '.') }}</td>
                                 <td>
-                                    <a href="{{ route('eventos.show', $evento) }}" class="text-blue-600 hover:underline">Ver</a> |
-                                    <a href="{{ route('eventos.edit', $evento) }}" class="text-yellow-600 hover:underline">Editar</a> |
-                                    <form action="{{ route('eventos.destroy', $evento) }}" method="POST" class="inline"
-                                          onsubmit="return confirm('¿Eliminar el evento {{ $evento->titulo }}?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="text-red-600 hover:underline">Eliminar</button>
-                                    </form>
+                                    <a href="{{ route('eventos.show', $evento) }}" class="text-blue-600 hover:underline">Ver</a>
+                                    @can('administrar')
+                                        | <a href="{{ route('eventos.edit', $evento) }}" class="text-yellow-600 hover:underline">Editar</a> |
+                                        <form action="{{ route('eventos.destroy', $evento) }}" method="POST" class="inline"
+                                              data-confirmar="¿Eliminar el evento {{ $evento->titulo }}?">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="text-red-600 hover:underline">Eliminar</button>
+                                        </form>
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach

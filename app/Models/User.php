@@ -50,5 +50,10 @@ class User extends Authenticatable
     public function eventosFavoritos()
     {
         return $this->belongsToMany(Evento::class);
-    }    
+    }
+
+    public function esAdmin(): bool
+    {
+        return $this->rol === 'admin';
+    }
 }

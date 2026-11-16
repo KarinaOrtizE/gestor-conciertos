@@ -18,9 +18,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // CRUD del proyecto
-    Route::resource('artistas', ArtistaController::class);
-    Route::resource('eventos', EventoController::class);
+    // CRUD del proyecto: cualquier usuario consulta, solo el admin modifica
+    Route::middleware('can:administrar')->group(function () {
+        Route::resource('artistas', ArtistaController::class)->except(['index', 'show']);
+        Route::resource('eventos', EventoController::class)->except(['index', 'show']);
+    });
+    Route::resource('artistas', ArtistaController::class)->only(['index', 'show']);
+    Route::resource('eventos', EventoController::class)->only(['index', 'show']);
 });
 
 require __DIR__.'/auth.php';
