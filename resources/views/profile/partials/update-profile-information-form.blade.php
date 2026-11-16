@@ -13,9 +13,38 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
+
+        <div x-data="{ vistaPrevia: null }">
+            <x-input-label for="avatar" value="Foto de perfil" />
+
+            <div class="flex items-center gap-4 mt-2">
+                <template x-if="vistaPrevia">
+                    <img :src="vistaPrevia" alt="Vista previa" class="object-cover w-20 h-20 rounded-full shrink-0">
+                </template>
+                <div x-show="!vistaPrevia">
+                    <x-avatar :user="$user" class="w-20 h-20 text-2xl" />
+                </div>
+
+                <div class="space-y-2">
+                    <input id="avatar" name="avatar" type="file" accept="image/jpeg,image/png,image/webp"
+                           @change="vistaPrevia = $event.target.files.length ? URL.createObjectURL($event.target.files[0]) : null"
+                           class="block w-full text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-purple-600 file:px-3 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-purple-500">
+                    <p class="text-xs text-gray-500">JPG, PNG o WEBP, máximo 2 MB.</p>
+
+                    @if ($user->avatar)
+                        <label class="inline-flex items-center gap-2 text-sm text-gray-600">
+                            <input type="checkbox" name="quitar_avatar" value="1" class="text-purple-600 border-gray-300 rounded shadow-sm focus:ring-purple-500">
+                            Quitar foto actual
+                        </label>
+                    @endif
+                </div>
+            </div>
+
+            <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
+        </div>
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
