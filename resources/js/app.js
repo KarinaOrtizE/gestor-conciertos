@@ -29,10 +29,15 @@ Alpine.data('buscadorSpotify', (url) => ({
     },
 
     usar(artista) {
-        for (const campo of ['nombre', 'generos', 'imagen_url', 'spotify_id']) {
+        for (const campo of ['nombre', 'imagen_url', 'spotify_id']) {
             document.getElementById(campo).value = artista[campo] ?? '';
         }
+        // Spotify dejó de enviar géneros a las apps en modo desarrollo: si no llegan, se conserva lo escrito.
+        if (artista.generos) {
+            document.getElementById('generos').value = artista.generos;
+        }
         this.resultados = [];
+        this.buscado = false;
     },
 }));
 

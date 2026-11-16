@@ -20,10 +20,11 @@
         <ul x-show="resultados.length" x-cloak class="mt-3 space-y-2">
             <template x-for="artista in resultados" :key="artista.spotify_id">
                 <li class="flex items-center gap-3 p-2 bg-white rounded-md">
-                    <img x-show="artista.imagen_url" :src="artista.imagen_url" alt="" class="object-cover w-10 h-10 rounded-full">
+                    <img x-show="artista.imagen_url" :src="artista.imagen_url" alt="" class="object-cover w-10 h-10 rounded-full shrink-0">
+                    <div x-show="!artista.imagen_url" class="w-10 h-10 bg-gray-200 rounded-full shrink-0"></div>
                     <div class="flex-1 min-w-0">
                         <p class="font-medium text-gray-900 truncate" x-text="artista.nombre"></p>
-                        <p class="text-xs text-gray-500 truncate" x-text="artista.generos || 'Sin géneros'"></p>
+                        <p x-show="artista.generos" class="text-xs text-gray-500 truncate" x-text="artista.generos"></p>
                     </div>
                     <button type="button" @click="usar(artista)" class="px-3 py-1 text-sm text-green-700 border border-green-600 rounded hover:bg-green-50">
                         Usar

@@ -51,6 +51,27 @@ class SpotifyTest extends TestCase
         Http::assertSent(fn ($r) => str_contains($r->url(), 'api.spotify.com') && $r->hasHeader('Authorization', 'Bearer token-prueba'));
     }
 
+    public function test_artista_sin_generos_ni_imagen_se_devuelve_con_valores_vacios(): void
+    {
+        // Así responde hoy Spotify a las apps en modo desarrollo: sin el campo genres.
+        $this->configurar();
+        Http::fake([
+            'accounts.spotify.com/*' => Http::response(['access_token' => 'token-prueba', 'expires_in' => 3600]),
+            'api.spotify.com/v1/search*' => Http::response(['artists' => ['items' => [[
+                'id' => '5n9bMYfz9qss2VOW89EVs2',
+                'name' => 'Bomba Estéreo',
+                'images' => [],
+                'external_urls' => ['spotify' => 'https://open.spotify.com/artist/5n9bMYfz9qss2VOW89EVs2'],
+            ]]]]),
+        ]);
+
+        $this->actingAs(User::factory()->admin()->create())
+            ->getJson('/artistas/spotify/buscar?q=bomba')
+            ->assertOk()
+            ->assertJsonPath('artistas.0.generos', '')
+            ->assertJsonPath('artistas.0.imagen_url', null);
+    }
+
     public function test_el_token_se_reutiliza_entre_busquedas(): void
     {
         $this->configurar();

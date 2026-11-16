@@ -65,19 +65,20 @@ php artisan usuario:admin correo@ejemplo.com
 
 ## Spotify (opcional)
 
-El formulario de artistas puede buscar en Spotify y llenar el nombre, la foto, los géneros y el Spotify ID. Para activarlo:
+El formulario de artistas puede buscar en Spotify y llenar el nombre, la foto y el Spotify ID. Para activarlo:
 
-1. Entra a <https://developer.spotify.com/dashboard> y crea una app (en *Redirect URI* puedes poner `http://localhost:8000`; no se usa).
-2. Copia el *Client ID* y el *Client secret* en el `.env`:
+1. Entra a <https://developer.spotify.com/dashboard> con una cuenta **Premium** (Spotify la exige al dueño de la app desde 2026; si la suscripción vence, la búsqueda deja de funcionar).
+2. Crea una app, marca *Web API* y en *Redirect URI* pon `http://127.0.0.1:8000/callback` (Spotify la pide, pero esta app no la usa).
+3. Copia el *Client ID* y el *Client secret* en el `.env`:
 
    ```
    SPOTIFY_CLIENT_ID=tu-client-id
    SPOTIFY_CLIENT_SECRET=tu-client-secret
    ```
 
-3. Ejecuta `php artisan config:clear`.
+4. Ejecuta `php artisan config:clear`.
 
-Sin credenciales, el buscador no aparece y el formulario funciona igual que antes.
+Spotify ya no envía los géneros a las apps en modo desarrollo, así que ese campo se llena a mano. Sin credenciales, el buscador no aparece y el formulario funciona igual que antes.
 
 ## API
 
