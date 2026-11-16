@@ -31,7 +31,7 @@
     </header>
 
     <section class="max-w-6xl px-8 py-12 mx-auto">
-        <h2 class="mb-6 text-2xl font-bold">Eventos destacados</h2>
+        <h2 class="mb-6 text-2xl font-bold">Próximos eventos</h2>
         <div class="grid gap-6 md:grid-cols-3">
             @forelse ($eventos as $evento)
                 <div class="overflow-hidden bg-gray-800 rounded-lg">
@@ -48,7 +48,9 @@
                     </div>
                 </div>
             @empty
-                <p class="text-gray-400">Todavía no hay eventos registrados.</p>
+                <p class="text-gray-400">
+                    {{ $q !== '' ? 'No encontramos próximos eventos para esa búsqueda.' : 'Todavía no hay próximos eventos.' }}
+                </p>
             @endforelse
         </div>
     </section>

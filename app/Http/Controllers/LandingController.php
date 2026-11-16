@@ -9,12 +9,18 @@ class LandingController extends Controller
 {
     public function index(Request $request)
     {
-        $q = $request->query('q');
+        $q = trim((string) $request->query('q'));
+
+        // Se escapan % y _ para buscarlos como texto; '!' funciona como escape en SQLite, MySQL y PostgreSQL.
+        $patron = '%'.str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $q).'%';
 
         $eventos = Evento::with('artista')
-            ->when($q, function ($query) use ($q) {
-                $query->where('titulo', 'like', "%{$q}%")
-                      ->orWhereHas('artista', fn ($a) => $a->where('nombre', 'like', "%{$q}%"));
+            ->where('fecha', '>=', now())
+            ->when($q !== '', function ($query) use ($patron) {
+                $query->where(function ($busqueda) use ($patron) {
+                    $busqueda->whereRaw("titulo like ? escape '!'", [$patron])
+                        ->orWhereHas('artista', fn ($a) => $a->whereRaw("nombre like ? escape '!'", [$patron]));
+                });
             })
             ->orderBy('fecha')
             ->take(6)
