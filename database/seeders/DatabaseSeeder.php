@@ -24,5 +24,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Contenido de ejemplo. Para no sembrarlo, quita esta línea; para borrarlo: php artisan datos-prueba:borrar
+        $this->call(DatosDePruebaSeeder::class);
     }
 }

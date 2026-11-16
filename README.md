@@ -51,7 +51,7 @@ La aplicación queda en <http://localhost:8000>.
 
 Para desarrollar con recarga automática de estilos, usa `composer run dev` en lugar de `npm run build` y `php artisan serve`.
 
-## Usuarios de prueba
+## Datos de prueba
 
 `php artisan migrate --seed` crea estas cuentas, ambas con la contraseña `password`:
 
@@ -60,11 +60,28 @@ Para desarrollar con recarga automática de estilos, usa `composer run dev` en l
 | admin@example.com | admin |
 | test@example.com | usuario |
 
-Para dar el rol de admin a una cuenta que ya existe:
+También crea contenido de ejemplo con `DatosDePruebaSeeder`: 5 artistas (4 con Spotify ID y reproductor), 11 eventos próximos (uno con afiche) y 4 favoritos de `test@example.com`. Las fechas se calculan desde el día en que se siembra, así que los eventos siempre salen como próximos. Dos eventos sirven para ver el clima: *Concierto Clima Demo* (dentro de 3 días, muestra el pronóstico) y *Ciudad Rara Demo* (ciudad inexistente, muestra el aviso).
+
+Para sembrar solo el contenido de ejemplo en una base que ya existe:
+
+```bash
+php artisan db:seed --class=DatosDePruebaSeeder
+```
+
+Para borrarlo (pide confirmación; borra los artistas de ejemplo con sus eventos, afiches y favoritos, y no toca lo demás):
+
+```bash
+php artisan datos-prueba:borrar
+php artisan datos-prueba:borrar --usuarios   # también borra admin@example.com y test@example.com
+```
+
+Antes de usar `--usuarios`, dale el rol de admin a tu propia cuenta:
 
 ```bash
 php artisan usuario:admin correo@ejemplo.com
 ```
+
+Para quitar los datos de prueba del proyecto, borra `database/seeders/DatosDePruebaSeeder.php`, la carpeta `database/seeders/datos-prueba/`, `app/Console/Commands/BorrarDatosDePrueba.php`, `tests/Feature/DatosDePruebaTest.php` y la línea `$this->call(DatosDePruebaSeeder::class);` de `DatabaseSeeder.php`.
 
 ## Spotify (opcional)
 
