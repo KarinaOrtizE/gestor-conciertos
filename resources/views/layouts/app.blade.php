@@ -15,23 +15,34 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('styles')
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+    <body class="font-sans antialiased bg-gray-100">
+        <div x-data="{ menuAbierto: false }" @keydown.escape.window="menuAbierto = false" class="min-h-screen lg:flex">
             @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+            <div class="flex flex-col flex-1 min-w-0">
+                <!-- Barra superior solo en pantallas pequeñas -->
+                <div class="flex items-center gap-3 px-4 text-white bg-gray-900 h-14 lg:hidden">
+                    <button type="button" @click="menuAbierto = true" class="text-gray-300 hover:text-white"
+                            aria-label="Abrir menú" aria-controls="menu-lateral" :aria-expanded="menuAbierto">
+                        <x-icono nombre="menu" class="w-6 h-6" />
+                    </button>
+                    <span class="font-bold text-purple-400">🎵 Gestor de Conciertos</span>
+                </div>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <!-- Page Heading -->
+                @isset($header)
+                    <header class="bg-white shadow">
+                        <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                            {{ $header }}
+                        </div>
+                    </header>
+                @endisset
+
+                <!-- Page Content -->
+                <main class="flex-1">
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
 
         @stack('scripts')
