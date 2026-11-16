@@ -19,6 +19,29 @@
                     <a href="{{ route('eventos.index') }}" class="inline-block px-4 py-2 mt-4 text-white bg-purple-600 rounded hover:bg-purple-500">Ver eventos</a>
                 </div>
             @else
+                @if ($artistas->isNotEmpty())
+                    <section x-data="{ actual: @js($artistas->first()->spotify_id) }" class="p-6 bg-white rounded-lg shadow-sm"
+                             aria-labelledby="titulo-reproductor">
+                        <h3 id="titulo-reproductor" class="font-semibold text-gray-900">Escucha a los artistas de tus favoritos</h3>
+
+                        @if ($artistas->count() > 1)
+                            <div class="flex flex-wrap gap-2 mt-3" role="group" aria-label="Elegir artista">
+                                @foreach ($artistas as $artista)
+                                    <button type="button" @click="actual = @js($artista->spotify_id)"
+                                            :aria-pressed="(actual === @js($artista->spotify_id)).toString()"
+                                            :class="actual === @js($artista->spotify_id) ? 'bg-purple-600 text-white border-purple-600' : 'text-gray-700 border-gray-300 hover:bg-gray-50'"
+                                            class="px-3 py-1 text-sm border rounded-full">
+                                        {{ $artista->nombre }}
+                                    </button>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <x-reproductor-spotify :spotify-id="$artistas->first()->spotify_id" class="mt-4"
+                                               x-bind:src="'https://open.spotify.com/embed/artist/' + actual" />
+                    </section>
+                @endif
+
                 @foreach ($secciones as [$titulo, $eventos, $vacio])
                     @if ($eventos->isNotEmpty() || $vacio)
                         <section>

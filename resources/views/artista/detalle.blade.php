@@ -19,6 +19,11 @@
                     @endif
                 </p>
 
+                @if ($artista->spotify_id)
+                    <h3 class="mt-6 mb-2 font-bold">Escúchalo en Spotify</h3>
+                    <x-reproductor-spotify :spotify-id="$artista->spotify_id" title="Canciones de {{ $artista->nombre }} en Spotify" />
+                @endif
+
                 <h3 class="mt-6 mb-2 font-bold">Eventos de este artista</h3>
                 <ul class="pl-5 list-disc">
                     @forelse ($artista->eventos as $evento)
