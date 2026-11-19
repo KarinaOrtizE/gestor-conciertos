@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,17 +12,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Sin factories: en producción no se instala Faker y el servidor siembra al arrancar.
+        $cuentas = [
+            ['name' => 'Administrador', 'email' => 'admin@example.com', 'rol' => 'admin'],
+            ['name' => 'Test User', 'email' => 'test@example.com', 'rol' => 'usuario'],
+        ];
 
-        User::factory()->admin()->create([
-            'name' => 'Administrador',
-            'email' => 'admin@example.com',
-        ]);
+        foreach ($cuentas as $cuenta) {
+            $usuario = User::firstOrNew(['email' => $cuenta['email']]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+            if (! $usuario->exists) {
+                $usuario->forceFill($cuenta + ['password' => 'password', 'email_verified_at' => now()])->save();
+            }
+        }
 
         // Contenido de ejemplo. Para no sembrarlo, quita esta línea; para borrarlo: php artisan datos-prueba:borrar
         $this->call(DatosDePruebaSeeder::class);
