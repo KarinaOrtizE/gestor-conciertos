@@ -12,7 +12,7 @@ Hecha con Laravel 12 y Breeze (Blade, Tailwind y Alpine) sobre PostgreSQL. Los l
 - API REST en JSON para consultar y gestionar eventos y artistas.
 - Reporte de eventos y ficha de cada evento en PDF.
 - Búsqueda de artistas en Spotify para llenar el formulario.
-- Pronóstico del clima en el detalle de cada evento (Open-Meteo, sin clave).
+- Pronóstico del clima en el detalle de cada evento (Open-Meteo con MET Norway de respaldo, sin clave).
 - Eventos favoritos: cada usuario marca eventos con el corazón y los ve en *Mis favoritos*.
 - Reproductor de Spotify en el detalle del artista, en el del evento y en *Mis favoritos*.
 - Listo para desplegar en Render con Docker.
@@ -123,7 +123,7 @@ Los artistas con Spotify ID muestran el reproductor oficial de Spotify en su det
 
 ## Clima
 
-El detalle de cada evento muestra el pronóstico para su ciudad a la hora en que empieza, con datos de [Open-Meteo](https://open-meteo.com). Es gratis y no necesita clave. El pronóstico existe hasta 15 días antes del evento; para fechas más lejanas la página indica desde cuándo estará disponible. Las consultas se guardan en caché una hora, y las coordenadas de cada ciudad, 30 días.
+El detalle de cada evento muestra el pronóstico para su ciudad a la hora en que empieza. Usa [Open-Meteo](https://open-meteo.com) y, si no responde o agotó su límite diario (pasa en servidores compartidos como Render), [MET Norway](https://api.met.no). Los dos son gratis y no necesitan clave. El pronóstico existe hasta 15 días antes del evento (unos 10 con MET Norway); para fechas más lejanas la página indica desde cuándo estará disponible. Las consultas se guardan en caché una hora, y las coordenadas de cada ciudad, 30 días.
 
 ## API
 
