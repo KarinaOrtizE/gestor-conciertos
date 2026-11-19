@@ -19,6 +19,14 @@ else
     touch database/database.sqlite
 fi
 
+# Con la clave de Brevo se envían correos de verdad (recuperar contraseña); sin ella quedan en el log.
+if [ -n "$BREVO_API_KEY" ]; then
+    export MAIL_MAILER=brevo
+else
+    echo "Aviso: BREVO_API_KEY no está definida, los correos solo se escriben en el log." >&2
+    export MAIL_MAILER=log
+fi
+
 php artisan migrate --force
 php artisan db:sembrar-si-vacia
 
