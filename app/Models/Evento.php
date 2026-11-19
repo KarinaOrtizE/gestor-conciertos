@@ -36,6 +36,6 @@ class Evento extends Model
 
     public function usuariosFavoritos()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 }

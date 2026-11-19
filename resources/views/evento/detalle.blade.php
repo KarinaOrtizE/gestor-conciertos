@@ -45,6 +45,7 @@
 
                 <div class="flex flex-wrap items-center gap-4 mt-6">
                     <a href="{{ route('eventos.index') }}" class="text-blue-600 hover:underline">← Volver al listado</a>
+                    <x-boton-favorito :evento="$evento" :marcado="$esFavorito" />
                     <a href="{{ route('eventos.pdf', $evento) }}"
                        class="px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded hover:bg-gray-50">Descargar ficha en PDF</a>
                 </div>

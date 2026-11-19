@@ -41,7 +41,12 @@
                         <div class="flex items-center justify-center h-48 bg-gray-700 text-gray-400">Sin afiche</div>
                     @endif
                     <div class="p-4">
-                        <h3 class="text-lg font-bold">{{ $evento->titulo }}</h3>
+                        <div class="flex items-start justify-between gap-2">
+                            <h3 class="text-lg font-bold">{{ $evento->titulo }}</h3>
+                            @auth
+                                <x-boton-favorito :evento="$evento" :marcado="$favoritos->contains($evento->id)" compacto />
+                            @endauth
+                        </div>
                         <p class="text-purple-300">{{ $evento->artista->nombre }}</p>
                         <p class="text-sm text-gray-400">{{ $evento->fecha->format('d/m/Y H:i') }} · {{ $evento->ciudad }}</p>
                         <p class="mt-2 font-semibold">${{ number_format($evento->precio, 0, ',', '.') }}</p>

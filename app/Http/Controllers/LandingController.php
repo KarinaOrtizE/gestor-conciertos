@@ -23,6 +23,8 @@ class LandingController extends Controller
             ->take(6)
             ->get();
 
-        return view('landing', compact('eventos', 'q'));
+        $favoritos = $request->user()?->eventosFavoritos()->pluck('eventos.id') ?? collect();
+
+        return view('landing', compact('eventos', 'q', 'favoritos'));
     }
 }

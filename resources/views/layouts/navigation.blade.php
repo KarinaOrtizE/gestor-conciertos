@@ -23,6 +23,9 @@
         <x-sidebar-link :href="route('eventos.index')" :active="request()->routeIs('eventos.*')" icono="calendario">
             Eventos
         </x-sidebar-link>
+        <x-sidebar-link :href="route('favoritos.index')" :active="request()->routeIs('favoritos.*')" icono="corazon">
+            Favoritos
+        </x-sidebar-link>
         <x-sidebar-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')" icono="usuario">
             {{ __('Profile') }}
         </x-sidebar-link>
