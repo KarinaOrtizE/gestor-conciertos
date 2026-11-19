@@ -17,6 +17,32 @@
                 <p><strong>Género:</strong> {{ $evento->genero }}</p>
                 <p><strong>Precio:</strong> ${{ number_format($evento->precio, 0, ',', '.') }}</p>
 
+                <section class="p-4 mt-6 border rounded-lg bg-sky-50 border-sky-100" aria-labelledby="titulo-clima">
+                    <h3 id="titulo-clima" class="text-sm font-semibold text-sky-900">Clima para el día del evento</h3>
+
+                    @if ($clima['estado'] === 'ok')
+                        <div class="flex items-center gap-4 mt-2">
+                            <span class="text-4xl" aria-hidden="true">{{ $clima['icono'] }}</span>
+                            <div>
+                                <p class="text-2xl font-semibold text-gray-900">
+                                    {{ round($clima['temperatura']) }} °C
+                                    <span class="text-base font-normal text-gray-600">a las {{ $evento->fecha->format('H:i') }}</span>
+                                </p>
+                                <p class="text-gray-700">{{ $clima['descripcion'] }}</p>
+                                <p class="text-sm text-gray-600">
+                                    Mín. {{ round($clima['minima']) }} °C · Máx. {{ round($clima['maxima']) }} °C
+                                    @if (! is_null($clima['lluvia']))
+                                        · Probabilidad de lluvia {{ $clima['lluvia'] }} %
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-xs text-gray-500">Pronóstico para {{ $clima['ciudad'] }} · Fuente: Open-Meteo</p>
+                    @else
+                        <p class="mt-1 text-sm text-gray-600">{{ $clima['mensaje'] }}</p>
+                    @endif
+                </section>
+
                 <div class="flex flex-wrap items-center gap-4 mt-6">
                     <a href="{{ route('eventos.index') }}" class="text-blue-600 hover:underline">← Volver al listado</a>
                     <a href="{{ route('eventos.pdf', $evento) }}"

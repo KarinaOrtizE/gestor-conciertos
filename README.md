@@ -12,6 +12,7 @@ Hecha con Laravel 12 y Breeze (Blade, Tailwind y Alpine). Los listados usan Data
 - API REST en JSON para consultar y gestionar eventos y artistas.
 - Reporte de eventos y ficha de cada evento en PDF.
 - Búsqueda de artistas en Spotify para llenar el formulario.
+- Pronóstico del clima en el detalle de cada evento (Open-Meteo, sin clave).
 - Roles:
   - **admin**: crea, edita y elimina artistas y eventos.
   - **usuario**: consulta los listados y el detalle.
@@ -79,6 +80,10 @@ El formulario de artistas puede buscar en Spotify y llenar el nombre, la foto y 
 4. Ejecuta `php artisan config:clear`.
 
 Spotify ya no envía los géneros a las apps en modo desarrollo, así que ese campo se llena a mano. Sin credenciales, el buscador no aparece y el formulario funciona igual que antes.
+
+## Clima
+
+El detalle de cada evento muestra el pronóstico para su ciudad a la hora en que empieza, con datos de [Open-Meteo](https://open-meteo.com). Es gratis y no necesita clave. El pronóstico existe hasta 15 días antes del evento; para fechas más lejanas la página indica desde cuándo estará disponible. Las consultas se guardan en caché una hora, y las coordenadas de cada ciudad, 30 días.
 
 ## API
 
