@@ -87,7 +87,10 @@
             $(function () {
                 $('#tabla-eventos').DataTable({
                     language: { url: 'https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-ES.json' },
-                    columnDefs: [{ orderable: false, targets: [0, 7] }]
+                    columnDefs: [{ orderable: false, targets: [0, 7] }],
+                    // Ordena por fecha y deja que la tabla se desplace de lado en pantallas pequeñas.
+                    order: [[3, 'asc']],
+                    scrollX: true
                 });
             });
         </script>

@@ -72,7 +72,10 @@
             $(function () {
                 $('#tabla-artistas').DataTable({
                     language: { url: 'https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-ES.json' },
-                    columnDefs: [{ orderable: false, targets: [0, 4] }]
+                    columnDefs: [{ orderable: false, targets: [0, 4] }],
+                    // Ordena por nombre y deja que la tabla se desplace de lado en pantallas pequeñas.
+                    order: [[1, 'asc']],
+                    scrollX: true
                 });
             });
         </script>
