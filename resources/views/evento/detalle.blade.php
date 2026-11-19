@@ -44,7 +44,7 @@
                                 </p>
                             </div>
                         </div>
-                        <p class="mt-2 text-xs text-gray-500">Pronóstico para {{ $clima['ciudad'] }} · Fuente: Open-Meteo</p>
+                        <p class="mt-2 text-xs text-gray-500">Pronóstico para {{ $clima['ciudad'] }} · Fuente: {{ $clima['fuente'] }}</p>
                     @else
                         <p class="mt-1 text-sm text-gray-600">{{ $clima['mensaje'] }}</p>
                     @endif

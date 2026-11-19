@@ -102,4 +102,64 @@ class ClimaTest extends TestCase
 
         $this->verEvento('2026-11-20 21:00')->assertOk()->assertSee('No se pudo consultar el clima en este momento.');
     }
+
+    /** Serie de MET Norway para un día: horas en UTC, cada hora, con una temperatura distinta a la hora indicada (hora local). */
+    private function serieMet(string $dia, int $hora, float $temperatura, string $simbolo): array
+    {
+        $inicio = Carbon::parse("{$dia} 00:00", config('app.timezone'))->utc();
+
+        return ['properties' => ['timeseries' => collect(range(0, 23))->map(fn ($h) => [
+            'time' => $inicio->copy()->addHours($h)->format('Y-m-d\TH:i:s\Z'),
+            'data' => [
+                'instant' => ['details' => ['air_temperature' => $h === $hora ? $temperatura : 10.0 + $h / 2]],
+                'next_1_hours' => ['summary' => ['symbol_code' => $h === $hora ? $simbolo : 'cloudy']],
+            ],
+        ])->all()]];
+    }
+
+    public function test_si_open_meteo_agota_el_limite_usa_met_norway(): void
+    {
+        Http::fake([
+            'geocoding-api.open-meteo.com/*' => Http::response(['results' => [['name' => 'Bogotá', 'admin1' => 'Bogotá D.C.', 'latitude' => 4.609712, 'longitude' => -74.08175]]]),
+            'api.open-meteo.com/*' => Http::response(['error' => true, 'reason' => 'Daily API request limit exceeded.'], 429),
+            'api.met.no/*' => Http::response($this->serieMet('2026-11-18', 20, 16.6, 'lightrainshowers_night')),
+        ]);
+
+        $this->verEvento('2026-11-18 20:00')
+            ->assertOk()
+            ->assertSee('17 °C')
+            ->assertSee('Chubascos')
+            ->assertSee('Mín. 10 °C · Máx. 22 °C')
+            ->assertDontSee('Probabilidad de lluvia')
+            ->assertSee('Fuente: MET Norway');
+
+        Http::assertSent(fn ($r) => str_starts_with($r->url(), 'https://api.met.no/')
+            && $r['lat'] == 4.6097 && $r['lon'] == -74.0818
+            && str_starts_with($r->header('User-Agent')[0], 'GestorConciertos/'));
+    }
+
+    public function test_tras_el_limite_no_vuelve_a_consultar_open_meteo_durante_una_hora(): void
+    {
+        Http::fake([
+            'geocoding-api.open-meteo.com/*' => Http::response(['results' => [['name' => 'Bogotá', 'latitude' => 4.61, 'longitude' => -74.08]]]),
+            'api.open-meteo.com/*' => Http::response(['error' => true], 429),
+            'api.met.no/*' => Http::response($this->serieMet('2026-11-18', 20, 16.0, 'cloudy')),
+        ]);
+
+        $this->verEvento('2026-11-18 20:00')->assertSee('Fuente: MET Norway');
+        $this->verEvento('2026-11-18 20:00')->assertSee('Fuente: MET Norway');
+
+        Http::assertSentCount(3);
+    }
+
+    public function test_si_ambos_servicios_fallan_la_pagina_igual_carga(): void
+    {
+        Http::fake([
+            'geocoding-api.open-meteo.com/*' => Http::response(['results' => [['name' => 'Bogotá', 'latitude' => 4.61, 'longitude' => -74.08]]]),
+            'api.open-meteo.com/*' => Http::response(['error' => true], 429),
+            'api.met.no/*' => Http::response('error', 503),
+        ]);
+
+        $this->verEvento('2026-11-18 20:00')->assertOk()->assertSee('No se pudo consultar el clima en este momento.');
+    }
 }
