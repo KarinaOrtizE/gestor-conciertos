@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // En Render la conexión HTTPS termina en su proxy; así Laravel genera los enlaces con https.
         $middleware->trustProxies(at: '*');
+
+        // La interfaz consume la API con la sesión del navegador (Sanctum en modo SPA); los clientes externos usan token.
+        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // La API siempre responde errores en JSON, aunque el cliente no envíe Accept: application/json.

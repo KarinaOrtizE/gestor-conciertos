@@ -202,6 +202,20 @@ docker build -t gestor-conciertos .
 docker run --rm -p 8080:8080 -e APP_KEY="$(php artisan key:generate --show)" -e DB_URL="postgresql://usuario:clave@host:5432/base" gestor-conciertos
 ```
 
+### Probar la API con Postman
+
+`docs/gestor-conciertos.postman_collection.json` trae una petición por cada operación (GET, POST, PUT y DELETE). Impórtala en Postman y ejecuta primero *Iniciar sesión*: guarda el token y las demás peticiones lo envían como `Authorization: Bearer`. La variable `base_url` apunta a Render; cámbiala a `http://localhost:8000` para usarla en local.
+
+## Servicios web que consume
+
+| Servicio | Métodos | Autorización y cabeceras |
+|---|---|---|
+| API propia, desde la interfaz | `PUT` y `DELETE /api/favoritos/{id}` (botón de favoritos) | Sesión del navegador con Sanctum en modo SPA, cookie y cabecera `X-XSRF-TOKEN` |
+| API propia, desde clientes externos | `GET`, `POST`, `PUT` y `DELETE` | Token de Sanctum en `Authorization: Bearer` |
+| Spotify | `POST` (token) y `GET` (búsqueda) | *Client Credentials*: `Authorization: Basic` con el Client ID y el secret para pedir el token, que se guarda en caché y se envía como `Bearer` |
+| Open-Meteo y MET Norway | `GET` | MET exige identificarse en el `User-Agent` |
+| Brevo | `POST` (envío de correo) | Cabecera `api-key` |
+
 ## Pruebas
 
 ```bash

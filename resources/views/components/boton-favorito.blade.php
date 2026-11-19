@@ -1,7 +1,7 @@
 @props(['evento', 'marcado' => false, 'compacto' => false])
 
 <form method="POST" action="{{ route('eventos.favorito', $evento) }}" {{ $attributes->class('inline-block') }}
-      x-data="botonFavorito({{ $marcado ? 'true' : 'false' }})" @submit.prevent="alternar($el)">
+      x-data="botonFavorito({{ $marcado ? 'true' : 'false' }}, '{{ route('api.favoritos.update', $evento) }}')" @submit.prevent="alternar($el)">
     @csrf
     <button type="submit" :disabled="enviando"
             aria-pressed="{{ $marcado ? 'true' : 'false' }}" :aria-pressed="marcado.toString()"
