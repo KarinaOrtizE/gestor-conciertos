@@ -15,10 +15,12 @@
                     <div class="p-3 mb-4 text-green-800 bg-green-100 rounded">{{ session('ok') }}</div>
                 @endif
 
-                <div class="mb-4">
-                    <a href="{{ route('artistas.create') }}"
-                       class="px-4 py-2 text-white bg-purple-600 rounded hover:bg-purple-500">+ Nuevo artista</a>
-                </div>
+                @can('administrar')
+                    <div class="mb-4">
+                        <a href="{{ route('artistas.create') }}"
+                           class="px-4 py-2 text-white bg-purple-600 rounded hover:bg-purple-500">+ Nuevo artista</a>
+                    </div>
+                @endcan
 
                 <table id="tabla-artistas" class="display" style="width:100%">
                     <thead>
@@ -44,14 +46,16 @@
                                 <td>{{ $artista->generos }}</td>
                                 <td>{{ $artista->eventos_count }}</td>
                                 <td>
-                                    <a href="{{ route('artistas.show', $artista) }}" class="text-blue-600 hover:underline">Ver</a> |
-                                    <a href="{{ route('artistas.edit', $artista) }}" class="text-yellow-600 hover:underline">Editar</a> |
-                                    <form action="{{ route('artistas.destroy', $artista) }}" method="POST" class="inline"
-                                          onsubmit="return confirm('¿Eliminar a {{ $artista->nombre }}? También se borrarán sus eventos.')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="text-red-600 hover:underline">Eliminar</button>
-                                    </form>
+                                    <a href="{{ route('artistas.show', $artista) }}" class="text-blue-600 hover:underline">Ver</a>
+                                    @can('administrar')
+                                        | <a href="{{ route('artistas.edit', $artista) }}" class="text-yellow-600 hover:underline">Editar</a> |
+                                        <form action="{{ route('artistas.destroy', $artista) }}" method="POST" class="inline"
+                                              data-confirmar="¿Eliminar a {{ $artista->nombre }}? También se borrarán sus eventos.">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="text-red-600 hover:underline">Eliminar</button>
+                                        </form>
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach

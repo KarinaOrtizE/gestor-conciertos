@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Artista;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ArtistaController extends Controller
 {
@@ -59,6 +60,10 @@ class ArtistaController extends Controller
 
     public function destroy(Artista $artista)
     {
+        // La base borra los eventos en cascada, pero sus afiches hay que quitarlos del disco aquí.
+        Storage::disk('public')->delete(
+            $artista->eventos()->whereNotNull('afiche')->pluck('afiche')->all()
+        );
         $artista->delete();
 
         return redirect()->route('artistas.index')->with('ok', 'Artista eliminado.');
