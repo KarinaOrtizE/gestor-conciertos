@@ -10,7 +10,14 @@
                     <img src="{{ $artista->imagen_url }}" class="object-cover w-40 h-40 mb-4 rounded-lg" alt="">
                 @endif
                 <p><strong>Géneros:</strong> {{ $artista->generos ?: 'Sin especificar' }}</p>
-                <p><strong>Spotify ID:</strong> {{ $artista->spotify_id ?: 'Registrado manualmente' }}</p>
+                <p><strong>Spotify:</strong>
+                    @if ($artista->spotify_id)
+                        <a href="https://open.spotify.com/artist/{{ $artista->spotify_id }}" target="_blank" rel="noopener"
+                           class="text-green-700 hover:underline">Abrir en Spotify</a>
+                    @else
+                        Registrado manualmente
+                    @endif
+                </p>
 
                 <h3 class="mt-6 mb-2 font-bold">Eventos de este artista</h3>
                 <ul class="pl-5 list-disc">

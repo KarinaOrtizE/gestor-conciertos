@@ -6,6 +6,7 @@ use App\Http\Controllers\EventoController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\SpotifyController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
@@ -21,6 +22,7 @@ Route::middleware('auth')->group(function () {
 
     // CRUD del proyecto: cualquier usuario consulta, solo el admin modifica
     Route::middleware('can:administrar')->group(function () {
+        Route::get('/artistas/spotify/buscar', [SpotifyController::class, 'buscar'])->name('artistas.spotify');
         Route::resource('artistas', ArtistaController::class)->except(['index', 'show']);
         Route::resource('eventos', EventoController::class)->except(['index', 'show']);
     });
