@@ -29,7 +29,10 @@ class AppServiceProvider extends ServiceProvider
         Builder::macro('whereContiene', function (string $columna, string $texto) {
             $patron = '%'.str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $texto).'%';
 
-            return $this->whereRaw($this->grammar->wrap($columna)." like ? escape '!'", [$patron]);
+            // En PostgreSQL LIKE distingue mayúsculas; ILIKE no.
+            $operador = $this->getConnection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+
+            return $this->whereRaw($this->grammar->wrap($columna)." {$operador} ? escape '!'", [$patron]);
         });
     }
 }

@@ -2,7 +2,7 @@
 
 Aplicación web para publicar y administrar conciertos: artistas, eventos con su afiche y una página pública donde cualquiera puede buscar los próximos eventos.
 
-Hecha con Laravel 12 y Breeze (Blade, Tailwind y Alpine). Los listados usan DataTables.
+Hecha con Laravel 12 y Breeze (Blade, Tailwind y Alpine) sobre PostgreSQL. Los listados usan DataTables.
 
 ## Funcionalidades
 
@@ -22,7 +22,8 @@ Hecha con Laravel 12 y Breeze (Blade, Tailwind y Alpine). Los listados usan Data
 
 ## Requisitos
 
-- PHP 8.2 o superior con las extensiones `pdo_sqlite`, `gd`, `mbstring`, `xml` y `fileinfo`
+- PHP 8.2 o superior con las extensiones `pdo_pgsql`, `gd`, `mbstring`, `xml` y `fileinfo` (y `pdo_sqlite` para las pruebas)
+- PostgreSQL 14 o superior
 - Composer
 - Node.js 20 o superior y npm
 
@@ -38,7 +39,7 @@ npm install
 cp .env.example .env
 php artisan key:generate
 
-touch database/database.sqlite
+# Crea la base en PostgreSQL y configura DB_* en el .env (ver «Base de datos»)
 php artisan migrate --seed
 
 # Necesario para que se vean los afiches subidos
@@ -51,6 +52,21 @@ php artisan serve
 La aplicación queda en <http://localhost:8000>.
 
 Para desarrollar con recarga automática de estilos, usa `composer run dev` en lugar de `npm run build` y `php artisan serve`.
+
+### Base de datos
+
+La base del proyecto es PostgreSQL. En el `.env`:
+
+```
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=gestor_conciertos
+DB_USERNAME=postgres
+DB_PASSWORD=tu-clave
+```
+
+También se puede usar una sola variable: `DB_URL=postgresql://usuario:clave@host:5432/base`. Para probar rápido sin instalar PostgreSQL, `DB_CONNECTION=sqlite` con `touch database/database.sqlite` funciona igual. Las pruebas automáticas usan SQLite en memoria.
 
 ## Datos de prueba
 
@@ -153,7 +169,7 @@ curl -X POST http://localhost:8000/api/artistas \
 
 ## Despliegue en Render
 
-El repositorio trae `Dockerfile` y `render.yaml` (Blueprint) para publicarlo en el plan gratuito de [Render](https://render.com).
+El repositorio trae `Dockerfile` y `render.yaml` (Blueprint) para publicarlo en el plan gratuito de [Render](https://render.com): un servicio web y una base PostgreSQL.
 
 1. En Render: **New → Blueprint** y elige este repositorio (conectado con GitHub, o pegando la URL pública del repositorio).
 2. Render pide tres valores:
@@ -163,15 +179,19 @@ El repositorio trae `Dockerfile` y `render.yaml` (Blueprint) para publicarlo en 
 
 Cómo funciona en el plan gratuito:
 
-- Al arrancar, el contenedor crea la base SQLite, la llena con los [datos de prueba](#datos-de-prueba) y cachea la configuración (`docker/iniciar.sh`).
+- Al arrancar, el contenedor aplica las migraciones en PostgreSQL y, si la base está vacía, la llena con los [datos de prueba](#datos-de-prueba) (`docker/iniciar.sh`).
+- Los registros (eventos, artistas, cuentas, favoritos) se guardan en PostgreSQL y no se pierden al reiniciar.
+- Los archivos subidos (afiches nuevos y fotos de perfil) sí se pierden en cada reinicio, porque el disco del plan gratuito no es persistente; la app deja de mostrarlos en lugar de mostrar una imagen rota. El afiche de ejemplo se repone solo.
 - El servidor se apaga tras 15 minutos sin visitas y la primera visita después tarda cerca de un minuto en responder.
-- El disco no es persistente: en cada reinicio o nuevo despliegue se pierde lo creado (eventos, afiches, fotos, cuentas) y la app vuelve a los datos de prueba.
+- Render permite una sola base PostgreSQL gratuita por workspace y la borra a los 30 días.
+
+Sin `DB_URL`, el contenedor usa una base SQLite temporal que se pierde al reiniciar.
 
 Para probar la imagen en local:
 
 ```bash
 docker build -t gestor-conciertos .
-docker run --rm -p 8080:8080 -e APP_KEY="$(php artisan key:generate --show)" -e DB_CONNECTION=sqlite gestor-conciertos
+docker run --rm -p 8080:8080 -e APP_KEY="$(php artisan key:generate --show)" -e DB_URL="postgresql://usuario:clave@host:5432/base" gestor-conciertos
 ```
 
 ## Pruebas

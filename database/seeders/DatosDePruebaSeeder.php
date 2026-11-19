@@ -58,7 +58,7 @@ class DatosDePruebaSeeder extends Seeder
             ]);
 
             if (isset($datos['afiche']) && ! $evento->afiche) {
-                $evento->afiche = Storage::disk('public')->putFile('afiches', new File(__DIR__.'/datos-prueba/'.$datos['afiche']));
+                $evento->afiche = self::copiarAfiche($datos['afiche']);
             }
 
             $evento->save();
@@ -68,5 +68,22 @@ class DatosDePruebaSeeder extends Seeder
         $test?->eventosFavoritos()->syncWithoutDetaching(
             Evento::whereIn('titulo', self::FAVORITOS_DE_TEST)->pluck('id')
         );
+    }
+
+    /** Vuelve a copiar los afiches de ejemplo que sigan en la base pero ya no estén en el disco. */
+    public static function restaurarArchivos(): void
+    {
+        foreach (array_filter(array_column(self::EVENTOS, 'afiche')) as $archivo) {
+            $ruta = 'afiches/datos-prueba-'.$archivo;
+
+            if (Evento::where('afiche', $ruta)->exists() && ! Storage::disk('public')->exists($ruta)) {
+                self::copiarAfiche($archivo);
+            }
+        }
+    }
+
+    private static function copiarAfiche(string $archivo): string
+    {
+        return Storage::disk('public')->putFileAs('afiches', new File(__DIR__.'/datos-prueba/'.$archivo), 'datos-prueba-'.$archivo);
     }
 }

@@ -53,8 +53,8 @@
                                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                                     @foreach ($eventos as $evento)
                                         <article class="flex gap-4 p-4 bg-white rounded-lg shadow-sm">
-                                            @if ($evento->afiche)
-                                                <img src="{{ asset('storage/'.$evento->afiche) }}" alt="" class="object-cover w-16 h-20 rounded shrink-0">
+                                            @if ($evento->aficheUrl())
+                                                <img src="{{ $evento->aficheUrl() }}" alt="" class="object-cover w-16 h-20 rounded shrink-0">
                                             @else
                                                 <div class="flex items-center justify-center w-16 h-20 text-gray-400 bg-gray-100 rounded shrink-0">
                                                     <x-icono nombre="calendario" class="w-6 h-6" />
