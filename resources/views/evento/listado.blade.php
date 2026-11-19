@@ -15,12 +15,20 @@
                     <div class="p-3 mb-4 text-green-800 bg-green-100 rounded">{{ session('ok') }}</div>
                 @endif
 
-                @can('administrar')
-                    <div class="mb-4">
-                        <a href="{{ route('eventos.create') }}"
-                           class="px-4 py-2 text-white bg-purple-600 rounded hover:bg-purple-500">+ Nuevo evento</a>
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                    <div>
+                        @can('administrar')
+                            <a href="{{ route('eventos.create') }}"
+                               class="inline-block px-4 py-2 text-white bg-purple-600 rounded hover:bg-purple-500">+ Nuevo evento</a>
+                        @endcan
                     </div>
-                @endcan
+                    <div class="flex flex-wrap gap-2 text-sm">
+                        <a href="{{ route('reportes.eventos') }}"
+                           class="px-3 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50">Descargar PDF</a>
+                        <a href="{{ route('reportes.eventos', ['proximos' => 1]) }}"
+                           class="px-3 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50">PDF de próximos</a>
+                    </div>
+                </div>
 
                 <table id="tabla-eventos" class="display" style="width:100%">
                     <thead>

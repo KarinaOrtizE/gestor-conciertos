@@ -17,7 +17,11 @@
                 <p><strong>Género:</strong> {{ $evento->genero }}</p>
                 <p><strong>Precio:</strong> ${{ number_format($evento->precio, 0, ',', '.') }}</p>
 
-                <a href="{{ route('eventos.index') }}" class="inline-block mt-6 text-blue-600 hover:underline">← Volver al listado</a>
+                <div class="flex flex-wrap items-center gap-4 mt-6">
+                    <a href="{{ route('eventos.index') }}" class="text-blue-600 hover:underline">← Volver al listado</a>
+                    <a href="{{ route('eventos.pdf', $evento) }}"
+                       class="px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded hover:bg-gray-50">Descargar ficha en PDF</a>
+                </div>
             </div>
         </div>
     </div>

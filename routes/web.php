@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReporteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
@@ -25,6 +26,10 @@ Route::middleware('auth')->group(function () {
     });
     Route::resource('artistas', ArtistaController::class)->only(['index', 'show']);
     Route::resource('eventos', EventoController::class)->only(['index', 'show']);
+
+    // Reportes en PDF
+    Route::get('/reportes/eventos', [ReporteController::class, 'eventos'])->name('reportes.eventos');
+    Route::get('/eventos/{evento}/pdf', [ReporteController::class, 'evento'])->name('eventos.pdf');
 });
 
 require __DIR__.'/auth.php';

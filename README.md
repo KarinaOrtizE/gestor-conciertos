@@ -10,6 +10,7 @@ Hecha con Laravel 12 y Breeze (Blade, Tailwind y Alpine). Los listados usan Data
 - Registro e inicio de sesión.
 - CRUD de artistas y de eventos (con subida de afiche).
 - API REST en JSON para consultar y gestionar eventos y artistas.
+- Reporte de eventos y ficha de cada evento en PDF.
 - Roles:
   - **admin**: crea, edita y elimina artistas y eventos.
   - **usuario**: consulta los listados y el detalle.
