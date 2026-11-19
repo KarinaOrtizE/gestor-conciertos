@@ -14,6 +14,7 @@ Hecha con Laravel 12 y Breeze (Blade, Tailwind y Alpine). Los listados usan Data
 - Búsqueda de artistas en Spotify para llenar el formulario.
 - Pronóstico del clima en el detalle de cada evento (Open-Meteo, sin clave).
 - Eventos favoritos: cada usuario marca eventos con el corazón y los ve en *Mis favoritos*.
+- Reproductor de Spotify en el detalle del artista, en el del evento y en *Mis favoritos*.
 - Roles:
   - **admin**: crea, edita y elimina artistas y eventos.
   - **usuario**: consulta los listados y el detalle.
@@ -81,6 +82,10 @@ El formulario de artistas puede buscar en Spotify y llenar el nombre, la foto y 
 4. Ejecuta `php artisan config:clear`.
 
 Spotify ya no envía los géneros a las apps en modo desarrollo, así que ese campo se llena a mano. Sin credenciales, el buscador no aparece y el formulario funciona igual que antes.
+
+### Reproductor
+
+Los artistas con Spotify ID muestran el reproductor oficial de Spotify en su detalle, en el de sus eventos y en *Mis favoritos*, donde se puede elegir entre los artistas de los eventos guardados. No necesita credenciales. Quien no haya iniciado sesión en Spotify en ese navegador escucha avances de 30 segundos.
 
 ## Clima
 

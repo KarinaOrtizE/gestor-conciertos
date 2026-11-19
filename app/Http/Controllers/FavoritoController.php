@@ -13,9 +13,16 @@ class FavoritoController extends Controller
         $favoritos = $request->user()->eventosFavoritos()->with('artista')->orderBy('fecha')->get();
         [$proximos, $pasados] = $favoritos->partition(fn (Evento $evento) => $evento->fecha->isFuture());
 
+        // Artistas para el reproductor: primero los de los próximos eventos, sin repetir.
+        $artistas = $proximos->concat($pasados)->pluck('artista')
+            ->filter(fn ($artista) => $artista->spotify_id)
+            ->unique('id')
+            ->values();
+
         return view('favoritos.index', [
             'proximos' => $proximos,
             'pasados' => $pasados->reverse(),
+            'artistas' => $artistas,
         ]);
     }
 

@@ -17,6 +17,13 @@
                 <p><strong>Género:</strong> {{ $evento->genero }}</p>
                 <p><strong>Precio:</strong> ${{ number_format($evento->precio, 0, ',', '.') }}</p>
 
+                @if ($evento->artista->spotify_id)
+                    <section class="mt-6" aria-labelledby="titulo-reproductor">
+                        <h3 id="titulo-reproductor" class="mb-2 text-sm font-semibold text-gray-900">Escucha a {{ $evento->artista->nombre }}</h3>
+                        <x-reproductor-spotify :spotify-id="$evento->artista->spotify_id" compacto title="Canciones de {{ $evento->artista->nombre }} en Spotify" />
+                    </section>
+                @endif
+
                 <section class="p-4 mt-6 border rounded-lg bg-sky-50 border-sky-100" aria-labelledby="titulo-clima">
                     <h3 id="titulo-clima" class="text-sm font-semibold text-sky-900">Clima para el día del evento</h3>
 
