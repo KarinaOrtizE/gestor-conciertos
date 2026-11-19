@@ -42,7 +42,7 @@
     "This is a secure area of the application. Please confirm your password before continuing.": "Esta es un área segura de la aplicación. Confirma tu contraseña para continuar.",
     "This password reset link will expire in :count minutes.": "Este enlace para restablecer la contraseña vence en :count minutos.",
     "Update Password": "Actualizar contraseña",
-    "Update your account's profile information and email address.": "Actualiza el nombre y el correo de tu cuenta.",
+    "Update your account's profile information and email address.": "Actualiza tu foto, tu nombre y el correo de tu cuenta.",
     "Verify Email Address": "Verificar correo electrónico",
     "Whoops!": "¡Ups!",
     "You are receiving this email because we received a password reset request for your account.": "Recibes este correo porque se solicitó restablecer la contraseña de tu cuenta.",

@@ -36,9 +36,7 @@
 
     <div class="p-4 border-t border-gray-800">
         <div class="flex items-center gap-3 mb-3">
-            <span class="flex items-center justify-center w-10 h-10 font-semibold text-white uppercase bg-purple-700 rounded-full shrink-0">
-                {{ mb_substr(Auth::user()->name, 0, 1) }}
-            </span>
+            <x-avatar :user="Auth::user()" />
             <div class="min-w-0">
                 <p class="text-sm font-medium text-white truncate">{{ Auth::user()->name }}</p>
                 <p class="text-xs text-gray-400">{{ Auth::user()->esAdmin() ? 'Administrador' : 'Usuario' }}</p>

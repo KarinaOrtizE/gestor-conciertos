@@ -52,6 +52,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Evento::class);
     }
 
+    public function avatarUrl(): ?string
+    {
+        return $this->avatar ? asset('storage/'.$this->avatar) : null;
+    }
+
     public function esAdmin(): bool
     {
         return $this->rol === 'admin';

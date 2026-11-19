@@ -174,5 +174,6 @@ return [
         'nombre' => 'nombre',
         'spotify_id' => 'Spotify ID',
         'imagen_url' => 'URL de la imagen',
+        'avatar' => 'foto de perfil',
     ],
 ];
