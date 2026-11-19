@@ -35,8 +35,8 @@
         <div class="grid gap-6 md:grid-cols-3">
             @forelse ($eventos as $evento)
                 <div class="overflow-hidden bg-gray-800 rounded-lg">
-                    @if ($evento->afiche)
-                        <img src="{{ asset('storage/'.$evento->afiche) }}" alt="{{ $evento->titulo }}" class="object-cover w-full h-48">
+                    @if ($evento->aficheUrl())
+                        <img src="{{ $evento->aficheUrl() }}" alt="{{ $evento->titulo }}" class="object-cover w-full h-48">
                     @else
                         <div class="flex items-center justify-center h-48 bg-gray-700 text-gray-400">Sin afiche</div>
                     @endif

@@ -29,6 +29,12 @@ class Evento extends Model
         });
     }
 
+    /** URL del afiche, o null si no tiene o si el archivo ya no existe (el disco del servidor se borra al reiniciar). */
+    public function aficheUrl(): ?string
+    {
+        return $this->afiche && Storage::disk('public')->exists($this->afiche) ? asset('storage/'.$this->afiche) : null;
+    }
+
     public function artista()
     {
         return $this->belongsTo(Artista::class);

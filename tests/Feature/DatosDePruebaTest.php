@@ -90,6 +90,32 @@ class DatosDePruebaTest extends TestCase
         $this->assertSame(0, Artista::count());
     }
 
+    public function test_sembrar_si_vacia_siembra_una_sola_vez_y_repone_el_afiche_borrado(): void
+    {
+        $this->artisan('db:sembrar-si-vacia')->assertSuccessful();
+        $this->assertSame(11, Evento::count());
+
+        // Simula el reinicio del servidor: la base sigue, el archivo del afiche no.
+        $afiche = Evento::where('titulo', 'Gira Florecita Rockera')->value('afiche');
+        Storage::disk('public')->delete($afiche);
+
+        $this->artisan('db:sembrar-si-vacia')->expectsOutput('La base ya tiene datos; no se siembra.')->assertSuccessful();
+        $this->assertSame(11, Evento::count());
+        $this->assertSame(2, User::count());
+        Storage::disk('public')->assertExists($afiche);
+    }
+
+    public function test_un_afiche_que_ya_no_esta_en_el_disco_no_se_muestra(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+        $evento = Evento::where('titulo', 'Gira Florecita Rockera')->first();
+        Storage::disk('public')->delete($evento->afiche);
+
+        $this->assertNull($evento->aficheUrl());
+        $this->actingAs(User::first())->get("/eventos/{$evento->id}")->assertDontSee('storage/afiches', false);
+        $this->getJson("/api/eventos/{$evento->id}")->assertJsonPath('data.afiche_url', null);
+    }
+
     public function test_sin_datos_de_prueba_lo_dice(): void
     {
         $this->artisan('datos-prueba:borrar')->expectsOutput('No hay datos de prueba para borrar.')->assertSuccessful();

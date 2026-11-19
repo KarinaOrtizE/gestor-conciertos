@@ -47,8 +47,8 @@
                         @foreach ($eventos as $evento)
                             <tr>
                                 <td>
-                                    @if ($evento->afiche)
-                                        <img src="{{ asset('storage/'.$evento->afiche) }}" class="object-cover w-12 h-16 rounded" alt="">
+                                    @if ($evento->aficheUrl())
+                                        <img src="{{ $evento->aficheUrl() }}" class="object-cover w-12 h-16 rounded" alt="">
                                     @else
                                         —
                                     @endif

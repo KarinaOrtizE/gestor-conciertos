@@ -6,8 +6,8 @@
     <div class="py-12">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="p-6 bg-white shadow-sm sm:rounded-lg">
-                @if ($evento->afiche)
-                    <img src="{{ asset('storage/'.$evento->afiche) }}" class="object-cover w-64 mb-4 rounded-lg" alt="Afiche">
+                @if ($evento->aficheUrl())
+                    <img src="{{ $evento->aficheUrl() }}" class="object-cover w-64 mb-4 rounded-lg" alt="Afiche">
                 @endif
                 <p><strong>Artista:</strong>
                     <a href="{{ route('artistas.show', $evento->artista) }}" class="text-blue-600 hover:underline">{{ $evento->artista->nombre }}</a>

@@ -17,7 +17,7 @@ class EventoResource extends JsonResource
             'ciudad' => $this->ciudad,
             'precio' => (float) $this->precio,
             'genero' => $this->genero,
-            'afiche_url' => $this->afiche ? asset('storage/'.$this->afiche) : null,
+            'afiche_url' => $this->aficheUrl(),
             'artista_id' => $this->artista_id,
             'artista' => new ArtistaResource($this->whenLoaded('artista')),
             'creado' => $this->created_at?->toIso8601String(),

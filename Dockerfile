@@ -16,9 +16,9 @@ RUN composer dump-autoload --optimize --no-dev --no-scripts
 
 FROM php:8.4-apache
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
+    && apt-get install -y --no-install-recommends libpng-dev libjpeg62-turbo-dev libfreetype6-dev libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j"$(nproc)" gd opcache \
+    && docker-php-ext-install -j"$(nproc)" gd opcache pdo_pgsql \
     && rm -rf /var/lib/apt/lists/* \
     && a2enmod rewrite headers \
     && echo 'ServerName localhost' > /etc/apache2/conf-available/servidor.conf && a2enconf servidor \

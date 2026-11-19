@@ -62,8 +62,8 @@
 
 <div>
     <x-input-label for="afiche" value="Afiche del evento (JPG, PNG o WEBP, máx. 2 MB)" />
-    @if (isset($evento) && $evento->afiche)
-        <img src="{{ asset('storage/'.$evento->afiche) }}" class="object-cover w-40 mb-2 rounded" alt="Afiche actual">
+    @if (isset($evento) && $evento->aficheUrl())
+        <img src="{{ $evento->aficheUrl() }}" class="object-cover w-40 mb-2 rounded" alt="Afiche actual">
     @endif
     <input id="afiche" name="afiche" type="file" accept="image/*" class="block w-full mt-1">
     <x-input-error :messages="$errors->get('afiche')" class="mt-2" />
