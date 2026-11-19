@@ -7,7 +7,7 @@ Hecha con Laravel 12 y Breeze (Blade, Tailwind y Alpine) sobre PostgreSQL. Los l
 ## Funcionalidades
 
 - Página de inicio pública con buscador por evento o artista y los próximos eventos.
-- Registro e inicio de sesión.
+- Registro, inicio de sesión y recuperación de contraseña por correo.
 - CRUD de artistas y de eventos (con subida de afiche).
 - API REST en JSON para consultar y gestionar eventos y artistas.
 - Reporte de eventos y ficha de cada evento en PDF.
@@ -120,6 +120,14 @@ Spotify ya no envía los géneros a las apps en modo desarrollo, así que ese ca
 ### Reproductor
 
 Los artistas con Spotify ID muestran el reproductor oficial de Spotify en su detalle, en el de sus eventos y en *Mis favoritos*, donde se puede elegir entre los artistas de los eventos guardados. No necesita credenciales. Quien no haya iniciado sesión en Spotify en ese navegador escucha avances de 30 segundos.
+
+## Correo (recuperar contraseña)
+
+*¿Olvidaste tu contraseña?* envía un enlace por correo. En local los correos quedan en `storage/logs/laravel.log` (`MAIL_MAILER=log`). En producción se envían con la API HTTP de [Brevo](https://www.brevo.com) (gratis hasta 300 correos al día), porque Render bloquea SMTP en el plan gratuito:
+
+1. Crea una cuenta en Brevo y verifica el correo remitente en *Senders, Domains & Dedicated IPs → Senders*.
+2. Genera una clave en *SMTP & API → API Keys*.
+3. Configura `MAIL_MAILER=brevo`, `BREVO_API_KEY` y `MAIL_FROM_ADDRESS` (el remitente verificado). En Render basta con `BREVO_API_KEY` y `MAIL_FROM_ADDRESS`; el contenedor activa Brevo solo.
 
 ## Clima
 

@@ -37,6 +37,11 @@ return [
 
     'mailers' => [
 
+        // API HTTP de Brevo: Render bloquea SMTP en el plan gratuito.
+        'brevo' => [
+            'transport' => 'brevo',
+        ],
+
         'smtp' => [
             'transport' => 'smtp',
             'scheme' => env('MAIL_SCHEME'),

@@ -12,6 +12,12 @@ services:
         sync: false
       - key: SPOTIFY_CLIENT_SECRET
         sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: MAIL_FROM_ADDRESS
+        sync: false
+      - key: MAIL_FROM_NAME
+        value: Gestor de Conciertos
       - key: DB_URL
         fromDatabase:
           name: gestor-conciertos-db
