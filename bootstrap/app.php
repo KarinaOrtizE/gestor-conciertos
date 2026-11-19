@@ -13,7 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // En Render la conexión HTTPS termina en su proxy; así Laravel genera los enlaces con https.
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // La API siempre responde errores en JSON, aunque el cliente no envíe Accept: application/json.

@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: gestor-conciertos
+    runtime: docker
+    plan: free
+    region: virginia
+    healthCheckPath: /up
+    envVars:
+      - key: APP_KEY
+        sync: false
+      - key: SPOTIFY_CLIENT_ID
+        sync: false
+      - key: SPOTIFY_CLIENT_SECRET
+        sync: false
+      - key: APP_NAME
+        value: Gestor de Conciertos
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_LOCALE
+        value: es
+      - key: APP_TIMEZONE
+        value: America/Bogota
+      - key: PORT
+        value: "8080"
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: warning

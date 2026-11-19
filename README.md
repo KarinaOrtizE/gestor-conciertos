@@ -15,6 +15,7 @@ Hecha con Laravel 12 y Breeze (Blade, Tailwind y Alpine). Los listados usan Data
 - Pronóstico del clima en el detalle de cada evento (Open-Meteo, sin clave).
 - Eventos favoritos: cada usuario marca eventos con el corazón y los ve en *Mis favoritos*.
 - Reproductor de Spotify en el detalle del artista, en el del evento y en *Mis favoritos*.
+- Listo para desplegar en Render con Docker.
 - Roles:
   - **admin**: crea, edita y elimina artistas y eventos.
   - **usuario**: consulta los listados y el detalle.
@@ -148,6 +149,29 @@ curl -X POST http://localhost:8000/api/artistas \
      -H "Accept: application/json" \
      -H "Authorization: Bearer <token>" \
      -d nombre="Grupo Niche"
+```
+
+## Despliegue en Render
+
+El repositorio trae `Dockerfile` y `render.yaml` (Blueprint) para publicarlo en el plan gratuito de [Render](https://render.com).
+
+1. En Render: **New → Blueprint** y elige este repositorio (conectado con GitHub, o pegando la URL pública del repositorio).
+2. Render pide tres valores:
+   - `APP_KEY`: genérala con `php artisan key:generate --show` y pega el resultado completo (empieza con `base64:`).
+   - `SPOTIFY_CLIENT_ID` y `SPOTIFY_CLIENT_SECRET`: los de la app de Spotify. Si se dejan vacíos, el buscador de Spotify no aparece.
+3. **Apply**. La primera construcción tarda unos minutos; luego la app queda en `https://gestor-conciertos.onrender.com` (o el nombre que asigne Render).
+
+Cómo funciona en el plan gratuito:
+
+- Al arrancar, el contenedor crea la base SQLite, la llena con los [datos de prueba](#datos-de-prueba) y cachea la configuración (`docker/iniciar.sh`).
+- El servidor se apaga tras 15 minutos sin visitas y la primera visita después tarda cerca de un minuto en responder.
+- El disco no es persistente: en cada reinicio o nuevo despliegue se pierde lo creado (eventos, afiches, fotos, cuentas) y la app vuelve a los datos de prueba.
+
+Para probar la imagen en local:
+
+```bash
+docker build -t gestor-conciertos .
+docker run --rm -p 8080:8080 -e APP_KEY="$(php artisan key:generate --show)" -e DB_CONNECTION=sqlite gestor-conciertos
 ```
 
 ## Pruebas
