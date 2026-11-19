@@ -1,4 +1,9 @@
 <x-guest-layout>
+    <x-slot name="titulo">¿Olvidaste tu contraseña?</x-slot>
+    <x-slot name="pie">
+        <a href="{{ route('login') }}" class="font-medium text-purple-700 hover:text-purple-900 hover:underline">Volver a iniciar sesión</a>
+    </x-slot>
+
     <div class="mb-4 text-sm text-gray-600">
         {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
     </div>

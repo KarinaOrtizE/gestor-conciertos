@@ -1,4 +1,10 @@
 <x-guest-layout>
+    <x-slot name="titulo">Inicia sesión</x-slot>
+    <x-slot name="subtitulo">Entra para gestionar artistas, eventos y tus favoritos.</x-slot>
+    <x-slot name="pie">
+        ¿No tienes cuenta? <a href="{{ route('register') }}" class="font-medium text-purple-700 hover:text-purple-900 hover:underline">Regístrate</a>
+    </x-slot>
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -27,21 +33,26 @@
         <!-- Remember Me -->
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
+                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-purple-600 shadow-sm focus:ring-purple-500" name="remember">
                 <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 mt-6">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                <a class="text-purple-700 hover:text-purple-900 hover:underline" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
+            <x-primary-button>
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
     </form>
+
+    <div class="p-3 mt-6 text-sm text-gray-600 rounded-lg bg-purple-50">
+        <p class="font-medium text-purple-900">Cuentas de prueba</p>
+        <p>admin@example.com (administrador) o test@example.com (usuario), contraseña <code>password</code>.</p>
+    </div>
 </x-guest-layout>
