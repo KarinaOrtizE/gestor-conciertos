@@ -76,6 +76,12 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('artistas.index')" :active="request()->routeIs('artistas.*')">
+                Artistas
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('eventos.index')" :active="request()->routeIs('eventos.*')">
+                Eventos
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
