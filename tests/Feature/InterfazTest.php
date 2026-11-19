@@ -50,4 +50,19 @@ class InterfazTest extends TestCase
             ->post('/eventos', [])
             ->assertSessionHasErrors(['titulo' => 'El campo título es obligatorio.']);
     }
+
+    public function test_el_inicio_y_las_pantallas_de_acceso_heredan_sus_plantillas_maestras(): void
+    {
+        $this->get('/')->assertOk()
+            ->assertSee('<title>Próximos conciertos · Gestor de Conciertos</title>', false)
+            ->assertSee('Conciertos en vivo en Colombia');
+
+        $this->get('/login')->assertOk()
+            ->assertSee('Inicia sesión')
+            ->assertSee('Cuentas de prueba')
+            ->assertSee(route('register'));
+
+        $this->get('/register')->assertOk()->assertSee('Crea tu cuenta')->assertSee('Vive la música');
+        $this->get('/forgot-password')->assertOk()->assertSee('¿Olvidaste tu contraseña?');
+    }
 }

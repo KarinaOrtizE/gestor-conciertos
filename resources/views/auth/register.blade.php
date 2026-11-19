@@ -1,4 +1,10 @@
 <x-guest-layout>
+    <x-slot name="titulo">Crea tu cuenta</x-slot>
+    <x-slot name="subtitulo">Regístrate para ver los conciertos, guardar favoritos y escuchar a los artistas.</x-slot>
+    <x-slot name="pie">
+        ¿Ya tienes cuenta? <a href="{{ route('login') }}" class="font-medium text-purple-700 hover:text-purple-900 hover:underline">Inicia sesión</a>
+    </x-slot>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -39,14 +45,8 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
+        <x-primary-button class="justify-center w-full mt-6">
+            {{ __('Register') }}
+        </x-primary-button>
     </form>
 </x-guest-layout>

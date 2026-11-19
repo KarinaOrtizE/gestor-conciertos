@@ -1,4 +1,9 @@
 <x-guest-layout>
+    <x-slot name="titulo">Nueva contraseña</x-slot>
+    <x-slot name="pie">
+        <a href="{{ route('login') }}" class="font-medium text-purple-700 hover:text-purple-900 hover:underline">Volver a iniciar sesión</a>
+    </x-slot>
+
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
 
