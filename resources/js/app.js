@@ -41,8 +41,9 @@ Alpine.data('buscadorSpotify', (url) => ({
     },
 }));
 
-// Botón de favorito: alterna sin recargar. Si la petición falla, se envía el formulario normal.
-Alpine.data('botonFavorito', (marcado) => ({
+// Botón de favorito: consume la API REST (PUT agrega, DELETE quita) sin recargar.
+// Si la petición falla, se envía el formulario normal, que hace lo mismo por la ruta web.
+Alpine.data('botonFavorito', (marcado, urlApi) => ({
     marcado,
     enviando: false,
 
@@ -50,8 +51,8 @@ Alpine.data('botonFavorito', (marcado) => ({
         if (this.enviando) return;
         this.enviando = true;
         try {
-            const { data } = await window.axios.post(formulario.action);
-            this.marcado = data.favorito;
+            await window.axios({ method: this.marcado ? 'delete' : 'put', url: urlApi });
+            this.marcado = !this.marcado;
         } catch (e) {
             formulario.submit();
         } finally {

@@ -131,4 +131,22 @@ class FavoritoTest extends TestCase
         $this->getJson('/api/favoritos')->assertJsonCount(0, 'data');
         $this->putJson('/api/favoritos/999')->assertNotFound();
     }
+
+    public function test_la_interfaz_consume_la_api_de_favoritos_con_la_sesion_del_navegador(): void
+    {
+        $usuario = User::factory()->create();
+        $evento = $this->evento();
+
+        // Petición desde la misma app (Referer del dominio): Sanctum usa la sesión, sin token.
+        $this->actingAs($usuario)->withHeader('Referer', 'http://localhost/eventos')
+            ->putJson("/api/favoritos/{$evento->id}")->assertNoContent();
+        $this->assertTrue($usuario->eventosFavoritos()->whereKey($evento->id)->exists());
+
+        $this->actingAs($usuario)->withHeader('Referer', 'http://localhost/eventos')
+            ->deleteJson("/api/favoritos/{$evento->id}")->assertNoContent();
+        $this->assertSame(0, $usuario->eventosFavoritos()->count());
+
+        // El botón apunta a la API.
+        $this->actingAs($usuario)->get('/eventos')->assertSee(route('api.favoritos.update', $evento));
+    }
 }
