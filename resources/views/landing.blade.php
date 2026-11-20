@@ -45,6 +45,49 @@
             </dl>
         </div>
     </header>
+    @if ($proximo)
+        <section class="max-w-4xl px-4 mx-auto -mt-10 relative z-10 mb-12 sm:px-8">
+            <div class="p-6 text-center bg-gray-900 shadow-2xl rounded-2xl ring-1 ring-fuchsia-400/30 shadow-purple-950/50">
+                <p class="text-xs font-semibold tracking-widest uppercase text-fuchsia-300">Próximo concierto</p>
+                <h2 class="mt-1 text-xl font-bold sm:text-2xl">{{ $proximo->titulo }} · {{ $proximo->artista->nombre }}</h2>
+                <p class="text-sm text-gray-400">
+                    {{ $proximo->fecha->locale(app()->getLocale())->isoFormat('dddd D [de] MMMM, HH:mm') }} · {{ $proximo->ciudad }}
+                </p>
+
+                <div id="contador" data-fecha="{{ $proximo->fecha->toIso8601String() }}"
+                     class="flex justify-center gap-3 mt-5 sm:gap-4">
+                    @foreach (['dias' => 'Días', 'horas' => 'Horas', 'minutos' => 'Min', 'segundos' => 'Seg'] as $id => $etiqueta)
+                        <div class="w-16 py-3 rounded-xl sm:w-20 bg-white/5 ring-1 ring-white/10">
+                            <div id="cd-{{ $id }}" class="text-2xl font-extrabold sm:text-3xl">0</div>
+                            <div class="text-xs text-gray-400 uppercase">{{ $etiqueta }}</div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        <script>
+            (function () {
+                const caja = document.getElementById('contador');
+                const destino = new Date(caja.dataset.fecha).getTime();
+
+                function actualizar() {
+                    const resta = destino - Date.now();
+                    if (resta <= 0) {
+                        caja.innerHTML = '<p class="text-xl font-bold">¡El concierto ya comenzó! 🎉</p>';
+                        return;
+                    }
+                    document.getElementById('cd-dias').textContent = Math.floor(resta / 86400000);
+                    document.getElementById('cd-horas').textContent = Math.floor(resta / 3600000) % 24;
+                    document.getElementById('cd-minutos').textContent = Math.floor(resta / 60000) % 60;
+                    document.getElementById('cd-segundos').textContent = Math.floor(resta / 1000) % 60;
+                }
+
+                actualizar();
+                setInterval(actualizar, 1000);
+            })();
+        </script>
+    @endif
 
     <section class="max-w-6xl px-4 pb-16 mx-auto sm:px-8">
         <div class="flex flex-wrap items-end justify-between gap-4 mb-6">

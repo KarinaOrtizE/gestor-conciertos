@@ -44,6 +44,11 @@ class LandingController extends Controller
 
         $favoritos = $request->user()?->eventosFavoritos()->pluck('eventos.id') ?? collect();
 
-        return view('landing', compact('eventos', 'q', 'genero', 'generos', 'cifras', 'artistas', 'favoritos'));
+        $proximo = \App\Models\Evento::with('artista')
+            ->where('fecha', '>=', now())
+            ->orderBy('fecha')
+            ->first();
+
+        return view('landing', compact('eventos', 'q', 'genero', 'generos', 'cifras', 'artistas', 'favoritos', 'proximo'));
     }
 }

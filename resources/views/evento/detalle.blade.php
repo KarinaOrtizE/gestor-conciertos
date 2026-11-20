@@ -52,6 +52,17 @@
                            class="inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded hover:bg-gray-50">
                             <x-icono nombre="descargar" class="w-4 h-4" /> Descargar ficha en PDF
                         </a>
+                        @php
+                            $textoWhatsapp = "\u{1F3B5} *{$evento->titulo}* con {$evento->artista->nombre}\n"
+                                . "\u{1F4C5} {$evento->fecha->format('d/m/Y H:i')}\n"
+                                . "\u{1F4CD} {$evento->lugar}, {$evento->ciudad}\n\n"
+                                . "Mira más conciertos aquí: " . route('landing');
+                        @endphp
+                        <a href="https://wa.me/?text={{ rawurlencode($textoWhatsapp) }}"
+                            target="_blank" rel="noopener"
+                            class="inline-flex items-center gap-2 px-3 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-500">
+                            Compartir por WhatsApp
+                        </a>
                         @can('administrar')
                             <a href="{{ route('eventos.edit', $evento) }}"
                                class="inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded hover:bg-gray-50">
