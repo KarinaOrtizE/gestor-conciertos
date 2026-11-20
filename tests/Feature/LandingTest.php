@@ -48,4 +48,27 @@ class LandingTest extends TestCase
         $this->get('/?q=_')->assertDontSee('Descuento 50% Live')->assertDontSee('Concierto normal')
             ->assertSee('No encontramos próximos eventos para esa búsqueda.');
     }
+
+    public function test_filtra_por_genero_y_ignora_generos_que_no_existen(): void
+    {
+        $this->evento('Festival Rock al Parque', now()->addWeek());
+        $this->evento('Noche de salsa', now()->addWeeks(2), 'Grupo Niche')->update(['genero' => 'Salsa']);
+
+        $html = $this->get('/?genero=Salsa')->assertOk()->assertSee('Noche de salsa')->assertDontSee('Festival Rock al Parque')->getContent();
+        $this->assertMatchesRegularExpression('/aria-current="true"[^>]*>Salsa<\/a>/', $html);
+        $this->get('/?genero=Inventado')->assertOk()->assertSee('Noche de salsa')->assertSee('Festival Rock al Parque');
+    }
+
+    public function test_muestra_cifras_y_artistas_en_cartelera_solo_con_eventos_proximos(): void
+    {
+        $this->evento('Gira 1', now()->addWeek());
+        $this->evento('Gira 2', now()->addWeeks(2));
+        $this->evento('Bailable', now()->addWeek(), 'Grupo Niche');
+        $this->evento('Recuerdo', now()->subWeek(), 'Banda del pasado');
+
+        $this->get('/')->assertOk()
+            ->assertSeeInOrder(['3', 'Próximos conciertos', '2', 'Artistas', '1', 'Ciudades'])
+            ->assertSeeInOrder(['Artistas en cartelera', 'Aterciopelados', '2 conciertos', 'Grupo Niche', '1 concierto'])
+            ->assertDontSee('Banda del pasado');
+    }
 }

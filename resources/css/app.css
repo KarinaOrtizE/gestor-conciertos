@@ -5,3 +5,30 @@
 [x-cloak] {
     display: none !important;
 }
+
+/* DataTables con los colores del proyecto (selectores más específicos que los de su CSS) */
+.dt-container {
+    --dt-row-hover: 147, 51, 234;
+    --dt-row-stripe: 88, 28, 135;
+    --dt-column-ordering: 147, 51, 234;
+}
+div.dt-container .dt-search input.dt-input,
+div.dt-container .dt-length select.dt-input {
+    @apply rounded-full border-gray-300 text-sm focus:border-purple-500 focus:ring-purple-500;
+}
+div.dt-container .dt-search input.dt-input {
+    @apply px-4 py-1.5;
+}
+div.dt-container .dt-length select.dt-input {
+    @apply py-1 pl-3 pr-8;
+}
+div.dt-container .dt-paging .dt-paging-button {
+    @apply rounded-full !important;
+}
+div.dt-container .dt-paging .dt-paging-button.current,
+div.dt-container .dt-paging .dt-paging-button.current:hover {
+    @apply bg-purple-600 border-purple-600 text-white !important;
+}
+div.dt-container .dt-paging .dt-paging-button:not(.current):not(.disabled):hover {
+    @apply bg-purple-50 border-purple-200 text-purple-700 !important;
+}

@@ -10,16 +10,16 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="flex flex-col min-h-screen font-sans antialiased text-white bg-gray-900">
+<body class="flex flex-col min-h-screen font-sans antialiased text-white bg-gray-950">
 
-    <nav class="flex flex-wrap items-center justify-between gap-3 px-4 py-4 bg-gray-800 sm:px-8">
+    <nav class="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 px-4 py-4 border-b sm:px-8 bg-gray-950/80 backdrop-blur border-white/10">
         <a href="{{ route('landing') }}" class="text-xl font-bold text-purple-400">🎵 {{ config('app.name') }}</a>
         <div class="flex items-center gap-4">
             @auth
                 <a href="{{ route('dashboard') }}" class="hover:text-purple-400">Dashboard</a>
             @else
                 <a href="{{ route('login') }}" class="hover:text-purple-400">Iniciar sesión</a>
-                <a href="{{ route('register') }}" class="px-4 py-2 bg-purple-600 rounded hover:bg-purple-500">Registrarse</a>
+                <a href="{{ route('register') }}" class="px-4 py-2 font-semibold rounded-full bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500">Registrarse</a>
             @endauth
         </div>
     </nav>
@@ -28,7 +28,7 @@
         @yield('contenido')
     </main>
 
-    <footer class="px-4 py-6 text-sm text-center text-gray-400 border-t border-gray-800">
+    <footer class="px-4 py-8 text-sm text-center text-gray-500 border-t border-white/10">
         © {{ date('Y') }} {{ config('app.name') }} · Conciertos en vivo en Colombia
     </footer>
 </body>

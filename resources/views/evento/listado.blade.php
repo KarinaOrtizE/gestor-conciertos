@@ -9,7 +9,7 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="p-6 bg-white shadow-sm sm:rounded-lg">
+            <div class="p-6 bg-white shadow-sm sm:rounded-2xl ring-1 ring-gray-100">
 
                 @if (session('ok'))
                     <div class="p-3 mb-4 text-green-800 bg-green-100 rounded">{{ session('ok') }}</div>
@@ -19,7 +19,7 @@
                     <div>
                         @can('administrar')
                             <a href="{{ route('eventos.create') }}"
-                               class="inline-block px-4 py-2 text-white bg-purple-600 rounded hover:bg-purple-500">+ Nuevo evento</a>
+                               class="inline-flex items-center gap-2 px-4 py-2 font-semibold text-white rounded-full shadow bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500"><x-icono nombre="mas" class="w-4 h-4" /> Nuevo evento</a>
                         @endcan
                     </div>
                     <div class="flex flex-wrap gap-2 text-sm">
@@ -46,22 +46,16 @@
                     <tbody>
                         @foreach ($eventos as $evento)
                             <tr>
-                                <td>
-                                    @if ($evento->aficheUrl())
-                                        <img src="{{ $evento->aficheUrl() }}" class="object-cover w-12 h-16 rounded" alt="">
-                                    @else
-                                        —
-                                    @endif
-                                </td>
-                                <td>{{ $evento->titulo }}</td>
+                                <td><x-portada-evento :evento="$evento" class="w-12 h-16 rounded-lg" /></td>
+                                <td class="font-semibold text-gray-900">{{ $evento->titulo }}</td>
                                 <td>{{ $evento->artista->nombre }}</td>
                                 <td data-order="{{ $evento->fecha->timestamp }}">{{ $evento->fecha->format('d/m/Y H:i') }}</td>
                                 <td>{{ $evento->ciudad }}</td>
-                                <td>{{ $evento->genero }}</td>
+                                <td data-search="{{ $evento->genero }}" data-order="{{ $evento->genero }}"><x-genero :genero="$evento->genero" /></td>
                                 <td data-order="{{ $evento->precio }}">${{ number_format($evento->precio, 0, ',', '.') }}</td>
                                 <td class="whitespace-nowrap">
                                     <x-boton-favorito :evento="$evento" :marcado="$favoritos->contains($evento->id)" compacto class="align-middle" />
-                                    <a href="{{ route('eventos.show', $evento) }}" class="text-blue-600 hover:underline">Ver</a>
+                                    <a href="{{ route('eventos.show', $evento) }}" class="font-medium text-purple-700 hover:underline">Ver</a>
                                     @can('administrar')
                                         | <a href="{{ route('eventos.edit', $evento) }}" class="text-yellow-600 hover:underline">Editar</a> |
                                         <form action="{{ route('eventos.destroy', $evento) }}" method="POST" class="inline"

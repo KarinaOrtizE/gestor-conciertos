@@ -28,7 +28,7 @@ class ArtistaController extends Controller
 
     public function show(Artista $artista)
     {
-        $artista->load('eventos');
+        $artista->load(['eventos' => fn ($eventos) => $eventos->orderBy('fecha')]);
 
         return view('artista.detalle', compact('artista'));
     }

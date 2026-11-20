@@ -20,7 +20,7 @@
                 </div>
             @else
                 @if ($artistas->isNotEmpty())
-                    <section x-data="{ actual: @js($artistas->first()->spotify_id) }" class="p-6 bg-white rounded-lg shadow-sm"
+                    <section x-data="{ actual: @js($artistas->first()->spotify_id) }" class="p-6 bg-white shadow-sm rounded-2xl ring-1 ring-gray-100"
                              aria-labelledby="titulo-reproductor">
                         <h3 id="titulo-reproductor" class="font-semibold text-gray-900">Escucha a los artistas de tus favoritos</h3>
 
@@ -52,14 +52,8 @@
                             @else
                                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                                     @foreach ($eventos as $evento)
-                                        <article class="flex gap-4 p-4 bg-white rounded-lg shadow-sm">
-                                            @if ($evento->aficheUrl())
-                                                <img src="{{ $evento->aficheUrl() }}" alt="" class="object-cover w-16 h-20 rounded shrink-0">
-                                            @else
-                                                <div class="flex items-center justify-center w-16 h-20 text-gray-400 bg-gray-100 rounded shrink-0">
-                                                    <x-icono nombre="calendario" class="w-6 h-6" />
-                                                </div>
-                                            @endif
+                                        <article class="flex gap-4 p-4 bg-white shadow-sm rounded-2xl ring-1 ring-gray-100">
+                                            <x-portada-evento :evento="$evento" class="w-16 h-20 rounded-lg shrink-0" />
                                             <div class="flex-1 min-w-0">
                                                 <div class="flex items-start justify-between gap-2">
                                                     <a href="{{ route('eventos.show', $evento) }}" class="font-medium text-gray-900 hover:text-purple-700">{{ $evento->titulo }}</a>

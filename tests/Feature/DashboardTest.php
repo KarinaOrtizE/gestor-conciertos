@@ -60,4 +60,20 @@ class DashboardTest extends TestCase
             ->assertSee('No hay eventos programados en los próximos 6 meses.')
             ->assertDontSee('<canvas', false);
     }
+
+    public function test_muestra_los_proximos_conciertos_y_los_favoritos_del_usuario(): void
+    {
+        $usuario = User::factory()->create(['name' => 'Karina']);
+        $artista = Artista::create(['nombre' => 'Bomba Estéreo']);
+        $datos = ['lugar' => 'Estadio', 'ciudad' => 'Medellín', 'precio' => 90000, 'genero' => 'Electrónica', 'artista_id' => $artista->id];
+        $proximo = Evento::create($datos + ['titulo' => 'Bomba en vivo', 'fecha' => now()->addWeek()]);
+        Evento::create($datos + ['titulo' => 'Ya pasó', 'fecha' => now()->subWeek()]);
+        $usuario->eventosFavoritos()->attach($proximo);
+
+        $this->actingAs($usuario)->get('/dashboard')->assertOk()
+            ->assertSee('Hola, Karina')
+            ->assertSee('Tienes 1 evento próximo en favoritos.')
+            ->assertSeeInOrder(['Próximos conciertos', 'Bomba en vivo'])
+            ->assertDontSee('Ya pasó');
+    }
 }
