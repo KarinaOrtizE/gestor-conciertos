@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Symfony\Component\Mailer\Bridge\Brevo\Transport\BrevoApiTransport;
@@ -88,5 +89,22 @@ class CorreoTest extends TestCase
             'token' => $primero, 'email' => 'karina@ejemplo.com',
             'password' => 'ClaveNueva123', 'password_confirmation' => 'ClaveNueva123',
         ])->assertSessionHasErrors(['email' => 'Este enlace ya no es válido: venció (dura 60 minutos) o pediste uno más reciente. Solicita uno nuevo y usa solo el último correo.']);
+    }
+
+    public function test_un_enlace_rechazado_deja_el_motivo_en_el_log_sin_el_codigo(): void
+    {
+        Log::spy();
+        User::factory()->create(['email' => 'karina@ejemplo.com']);
+        $this->post('/forgot-password', ['email' => 'karina@ejemplo.com']);
+
+        $this->post('/reset-password', [
+            'token' => str_repeat('a', 64), 'email' => 'karina@ejemplo.com',
+            'password' => 'ClaveNueva123', 'password_confirmation' => 'ClaveNueva123',
+        ]);
+
+        Log::shouldHaveReceived('warning')->withArgs(fn ($mensaje, $datos) => $mensaje === 'Enlace de restablecimiento rechazado'
+            && $datos['motivo'] === 'el código no coincide con el último pedido'
+            && $datos['largo_codigo'] === 64
+            && ! in_array(str_repeat('a', 64), $datos, true));
     }
 }
