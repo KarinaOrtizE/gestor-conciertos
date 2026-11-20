@@ -9,7 +9,7 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="p-6 bg-white shadow-sm sm:rounded-lg">
+            <div class="p-6 bg-white shadow-sm sm:rounded-2xl ring-1 ring-gray-100">
 
                 @if (session('ok'))
                     <div class="p-3 mb-4 text-green-800 bg-green-100 rounded">{{ session('ok') }}</div>
@@ -18,7 +18,7 @@
                 @can('administrar')
                     <div class="mb-4">
                         <a href="{{ route('artistas.create') }}"
-                           class="px-4 py-2 text-white bg-purple-600 rounded hover:bg-purple-500">+ Nuevo artista</a>
+                           class="inline-flex items-center gap-2 px-4 py-2 font-semibold text-white rounded-full shadow bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500"><x-icono nombre="mas" class="w-4 h-4" /> Nuevo artista</a>
                     </div>
                 @endcan
 
@@ -35,18 +35,12 @@
                     <tbody>
                         @foreach ($artistas as $artista)
                             <tr>
-                                <td>
-                                    @if ($artista->imagen_url)
-                                        <img src="{{ $artista->imagen_url }}" class="object-cover w-12 h-12 rounded-full" alt="">
-                                    @else
-                                        —
-                                    @endif
-                                </td>
-                                <td>{{ $artista->nombre }}</td>
+                                <td><x-foto-artista :artista="$artista" class="w-12 h-12 text-lg" /></td>
+                                <td class="font-semibold text-gray-900">{{ $artista->nombre }}</td>
                                 <td>{{ $artista->generos }}</td>
                                 <td>{{ $artista->eventos_count }}</td>
                                 <td>
-                                    <a href="{{ route('artistas.show', $artista) }}" class="text-blue-600 hover:underline">Ver</a>
+                                    <a href="{{ route('artistas.show', $artista) }}" class="font-medium text-purple-700 hover:underline">Ver</a>
                                     @can('administrar')
                                         | <a href="{{ route('artistas.edit', $artista) }}" class="text-yellow-600 hover:underline">Editar</a> |
                                         <form action="{{ route('artistas.destroy', $artista) }}" method="POST" class="inline"

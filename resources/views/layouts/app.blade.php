@@ -9,13 +9,13 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('styles')
     </head>
-    <body class="font-sans antialiased bg-gray-100">
+    <body class="font-sans antialiased bg-slate-50">
         <div x-data="{ menuAbierto: false }" @keydown.escape.window="menuAbierto = false" class="min-h-screen lg:flex">
             @include('layouts.navigation')
 
@@ -31,7 +31,7 @@
 
                 <!-- Page Heading -->
                 @isset($header)
-                    <header class="bg-white shadow">
+                    <header class="bg-white border-b border-gray-100">
                         <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
                             {{ $header }}
                         </div>

@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Artista;
 use App\Models\Evento;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
         $totales = [
             'artistas' => Artista::count(),
@@ -33,6 +34,9 @@ class DashboardController extends Controller
             return [$etiqueta => $fechas->filter(fn ($fecha) => $fecha->isSameMonth($mes))->count()];
         });
 
-        return view('dashboard', compact('totales', 'porGenero', 'porMes'));
+        $proximos = Evento::with('artista')->where('fecha', '>=', now())->orderBy('fecha')->take(4)->get();
+        $misFavoritos = $request->user()->eventosFavoritos()->where('fecha', '>=', now())->count();
+
+        return view('dashboard', compact('totales', 'porGenero', 'porMes', 'proximos', 'misFavoritos'));
     }
 }
