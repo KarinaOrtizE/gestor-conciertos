@@ -33,7 +33,7 @@ class CorreoTest extends TestCase
         $usuario = User::factory()->create(['email' => 'karina@ejemplo.com']);
 
         $this->post('/forgot-password', ['email' => 'karina@ejemplo.com'])
-            ->assertSessionHas('status', 'Te enviamos por correo el enlace para restablecer tu contraseña.');
+            ->assertSessionHas('status', 'Te enviamos por correo el enlace para restablecer tu contraseña. Usa el del correo más reciente: si pides otro, el anterior deja de servir.');
 
         Notification::assertSentTo($usuario, ResetPassword::class, function (ResetPassword $aviso) use ($usuario) {
             $correo = $aviso->toMail($usuario);
@@ -65,5 +65,28 @@ class CorreoTest extends TestCase
         $this->from('/forgot-password')->post('/forgot-password', ['email' => 'karina@ejemplo.com'])
             ->assertRedirect('/forgot-password')
             ->assertSessionHasErrors(['email' => 'No pudimos enviar el correo en este momento. Intenta de nuevo más tarde.']);
+    }
+
+    public function test_un_enlace_anterior_deja_de_servir_y_el_mensaje_lo_explica(): void
+    {
+        Notification::fake();
+        $usuario = User::factory()->create(['email' => 'karina@ejemplo.com']);
+
+        $this->post('/forgot-password', ['email' => 'karina@ejemplo.com']);
+        $primero = null;
+        Notification::assertSentTo($usuario, ResetPassword::class, function (ResetPassword $aviso) use (&$primero) {
+            $primero = $aviso->token;
+
+            return true;
+        });
+
+        // Pasado el minuto de espera se pide otro enlace: el primero queda anulado.
+        $this->travel(2)->minutes();
+        $this->post('/forgot-password', ['email' => 'karina@ejemplo.com']);
+
+        $this->from("/reset-password/{$primero}")->post('/reset-password', [
+            'token' => $primero, 'email' => 'karina@ejemplo.com',
+            'password' => 'ClaveNueva123', 'password_confirmation' => 'ClaveNueva123',
+        ])->assertSessionHasErrors(['email' => 'Este enlace ya no es válido: venció (dura 60 minutos) o pediste uno más reciente. Solicita uno nuevo y usa solo el último correo.']);
     }
 }

@@ -15,6 +15,9 @@
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            @if ($errors->has('email'))
+                <a href="{{ route('password.request') }}" class="inline-block mt-2 text-sm font-medium text-purple-700 hover:underline">Pedir un enlace nuevo</a>
+            @endif
         </div>
 
         <!-- Password -->
