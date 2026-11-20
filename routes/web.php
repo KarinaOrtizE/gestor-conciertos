@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\SpotifyController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CalendarioController;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
@@ -37,6 +38,11 @@ Route::middleware('auth')->group(function () {
     // Reportes en PDF
     Route::get('/reportes/eventos', [ReporteController::class, 'eventos'])->name('reportes.eventos');
     Route::get('/eventos/{evento}/pdf', [ReporteController::class, 'evento'])->name('eventos.pdf');
+
+    // Calendario
+    Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
+    Route::get('/calendario/datos', [CalendarioController::class, 'datos'])->name('calendario.datos');
+    Route::get('/eventos/{evento}/ics', [CalendarioController::class, 'ics'])->name('eventos.ics');
 });
 
 require __DIR__.'/auth.php';
