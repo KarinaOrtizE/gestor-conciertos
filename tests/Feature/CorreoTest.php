@@ -8,6 +8,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Symfony\Component\Mailer\Bridge\Brevo\Transport\BrevoApiTransport;
+use Symfony\Component\Mailer\Exception\TransportException;
+use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Transport\AbstractTransport;
 use Tests\TestCase;
 
 class CorreoTest extends TestCase
@@ -40,5 +43,27 @@ class CorreoTest extends TestCase
                 && str_contains($html, 'Restablecer contraseña')
                 && str_contains($html, url('/reset-password/'.$aviso->token));
         });
+    }
+
+    public function test_si_el_servicio_de_correo_falla_se_avisa_sin_error_500(): void
+    {
+        Mail::extend('fallido', fn () => new class extends AbstractTransport
+        {
+            protected function doSend(SentMessage $message): void
+            {
+                throw new TransportException('Clave rechazada');
+            }
+
+            public function __toString(): string
+            {
+                return 'fallido://';
+            }
+        });
+        config(['mail.mailers.fallido' => ['transport' => 'fallido'], 'mail.default' => 'fallido']);
+        User::factory()->create(['email' => 'karina@ejemplo.com']);
+
+        $this->from('/forgot-password')->post('/forgot-password', ['email' => 'karina@ejemplo.com'])
+            ->assertRedirect('/forgot-password')
+            ->assertSessionHasErrors(['email' => 'No pudimos enviar el correo en este momento. Intenta de nuevo más tarde.']);
     }
 }
