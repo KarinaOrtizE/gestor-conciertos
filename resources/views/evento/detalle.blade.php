@@ -58,14 +58,13 @@
                                 . "\u{1F4CD} {$evento->lugar}, {$evento->ciudad}\n\n"
                                 . "Mira más conciertos aquí: " . route('landing');
                         @endphp
-                        <a href="https://wa.me/?text={{ rawurlencode($textoWhatsapp) }}"
-                            target="_blank" rel="noopener"
-                            class="inline-flex items-center gap-2 px-3 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-500">
-                            Compartir por WhatsApp
+                        <a href="https://wa.me/?text={{ rawurlencode($textoWhatsapp) }}" target="_blank" rel="noopener"
+                           class="inline-flex items-center gap-2 px-3 py-2 text-sm text-white bg-green-600 border border-green-600 rounded hover:bg-green-500">
+                            <x-icono nombre="compartir" class="w-4 h-4" /> Compartir por WhatsApp
                         </a>
                         <a href="{{ route('eventos.ics', $evento) }}"
-                            class="inline-flex items-center gap-2 px-4 py-2 mt-4 text-white bg-fuchsia-600 rounded-lg hover:bg-fuchsia-500">
-                                📅 Agregar a mi calendario
+                           class="inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded hover:bg-gray-50">
+                            <x-icono nombre="calendario" class="w-4 h-4" /> Agregar a mi calendario
                         </a>
                         @can('administrar')
                             <a href="{{ route('eventos.edit', $evento) }}"

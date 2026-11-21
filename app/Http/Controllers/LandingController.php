@@ -44,10 +44,10 @@ class LandingController extends Controller
 
         $favoritos = $request->user()?->eventosFavoritos()->pluck('eventos.id') ?? collect();
 
-        $proximo = \App\Models\Evento::with('artista')
-            ->where('fecha', '>=', now())
-            ->orderBy('fecha')
-            ->first();
+        // El contador destaca el próximo concierto solo en el inicio sin búsqueda ni filtro.
+        $proximo = $q === '' && ! $genero
+            ? $proximos()->with('artista')->orderBy('fecha')->first()
+            : null;
 
         return view('landing', compact('eventos', 'q', 'genero', 'generos', 'cifras', 'artistas', 'favoritos', 'proximo'));
     }

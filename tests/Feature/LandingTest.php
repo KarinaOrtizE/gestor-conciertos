@@ -71,4 +71,14 @@ class LandingTest extends TestCase
             ->assertSeeInOrder(['Artistas en cartelera', 'Aterciopelados', '2 conciertos', 'Grupo Niche', '1 concierto'])
             ->assertDontSee('Banda del pasado');
     }
+
+    public function test_el_contador_muestra_el_proximo_concierto_solo_sin_busqueda_ni_filtro(): void
+    {
+        $this->evento('Más adelante', now()->addMonth());
+        $this->evento('El más cercano', now()->addDays(3));
+
+        $this->get('/')->assertSeeInOrder(['Próximo concierto', 'El más cercano'])->assertSee('id="contador"', false);
+        $this->get('/?q=adelante')->assertDontSee('id="contador"', false);
+        $this->get('/?genero=Rock')->assertDontSee('id="contador"', false);
+    }
 }

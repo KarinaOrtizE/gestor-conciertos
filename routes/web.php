@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArtistaController;
+use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\FavoritoController;
@@ -9,7 +10,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\SpotifyController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CalendarioController;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 

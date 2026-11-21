@@ -15,10 +15,10 @@ class CalendarioController extends Controller
     public function datos()
     {
         $eventos = Evento::with('artista')->get()->map(fn ($e) => [
-            'id'    => $e->id,
-            'title' => $e->titulo . ' · ' . $e->artista->nombre,
+            'id' => $e->id,
+            'title' => $e->titulo.' · '.$e->artista->nombre,
             'start' => $e->fecha->toIso8601String(),
-            'url'   => route('eventos.show', $e),
+            'url' => route('eventos.show', $e),
         ]);
 
         return response()->json($eventos);
@@ -40,20 +40,20 @@ class CalendarioController extends Controller
             'PRODID:-//Gestor Conciertos//ES',
             'CALSCALE:GREGORIAN',
             'BEGIN:VEVENT',
-            'UID:evento-' . $evento->id . '@gestor-conciertos',
-            'DTSTAMP:' . now()->utc()->format('Ymd\THis\Z'),
-            'DTSTART:' . $inicio->format('Ymd\THis\Z'),
-            'DTEND:' . $fin->format('Ymd\THis\Z'),
-            'SUMMARY:' . $esc($evento->titulo . ' - ' . $evento->artista->nombre),
-            'LOCATION:' . $esc($evento->lugar . ', ' . $evento->ciudad),
-            'DESCRIPTION:' . $esc('Género: ' . $evento->genero . '. Precio: $' . number_format($evento->precio, 0, ',', '.')),
+            'UID:evento-'.$evento->id.'@gestor-conciertos',
+            'DTSTAMP:'.now()->utc()->format('Ymd\THis\Z'),
+            'DTSTART:'.$inicio->format('Ymd\THis\Z'),
+            'DTEND:'.$fin->format('Ymd\THis\Z'),
+            'SUMMARY:'.$esc($evento->titulo.' - '.$evento->artista->nombre),
+            'LOCATION:'.$esc($evento->lugar.', '.$evento->ciudad),
+            'DESCRIPTION:'.$esc('Género: '.$evento->genero.'. Precio: $'.number_format($evento->precio, 0, ',', '.')),
             'END:VEVENT',
             'END:VCALENDAR',
         ];
 
-        return response(implode("\r\n", $lineas) . "\r\n", 200, [
-            'Content-Type'        => 'text/calendar; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="evento-' . $evento->id . '.ics"',
+        return response(implode("\r\n", $lineas)."\r\n", 200, [
+            'Content-Type' => 'text/calendar; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="evento-'.$evento->id.'.ics"',
         ]);
     }
 }

@@ -15,6 +15,9 @@ Hecha con Laravel 12 y Breeze (Blade, Tailwind y Alpine) sobre PostgreSQL. Los l
 - Pronóstico del clima en el detalle de cada evento (Open-Meteo con MET Norway de respaldo, sin clave).
 - Eventos favoritos: cada usuario marca eventos con el corazón y los ve en *Mis favoritos*.
 - Reproductor de Spotify en el detalle del artista, en el del evento y en *Mis favoritos*.
+- Contador regresivo al próximo concierto en la página de inicio.
+- Calendario de eventos (FullCalendar) con vista de mes y de lista.
+- Agregar un evento al calendario del celular o del computador (archivo `.ics`) y compartirlo por WhatsApp.
 - Listo para desplegar en Render con Docker.
 - Roles:
   - **admin**: crea, edita y elimina artistas y eventos.
